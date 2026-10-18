@@ -110,14 +110,13 @@
     <canvas id="webgl" aria-label="Adegan jemputan 3D dengan kamera bergerak mengikut scroll"></canvas>
     <div class="vignette"></div><div class="grain"></div>
     <div class="topbar"><div class="brand"><span class="brand-mark">A</span><strong>AYU <span style="color:var(--gold)">×</span> DANIAL</strong></div><div class="top-counter"><span id="chapterNum">01</span> <span style="color:var(--gold)">/</span> 04 &nbsp;·&nbsp; 02 JAN 2027</div></div>
-    <div class="chapter-note"><div class="chapter-kicker" id="chapterKicker">MULA PERJALANAN</div><h2 class="chapter-title" id="chapterTitle">Ayu &amp; Danial</h2><p class="chapter-desc" id="chapterDesc">Skrol perlahan untuk melalui gerbang dan membuka setiap babak jemputan.</p><a class="location-link" id="locationLink" href="https://maps.app.goo.gl/35REVG1qtnf4qi9Y9" target="_blank" rel="noopener noreferrer">Buka Google Maps ↗</a></div>
+    <div class="chapter-note"><div class="chapter-kicker" id="chapterKicker">MULA PERJALANAN</div><h2 class="chapter-title" id="chapterTitle">Ayu &amp; Danial</h2><p class="chapter-desc" id="chapterDesc">Skrol perlahan untuk melalui gerbang dan membuka setiap babak jemputan.</p><a class="location-link" id="locationLink" href="https://maps.app.goo.gl/35REVG1qtnf4qi9Y9" target="_blank" rel="noopener noreferrer">Buka Google Maps</a></div>
     <div class="scroll-hint" id="scrollHint"><span>SCROLL UNTUK TERUSKAN</span><span class="chevron"></span></div>
     <div class="progress-wrap"><div class="progress-label">PERJALANAN</div><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div><div class="chapter-dots" aria-hidden="true"><span class="chapter-dot active"></span><span class="chapter-dot"></span><span class="chapter-dot"></span><span class="chapter-dot"></span></div><div class="progress-label" id="progressPct">00%</div></div>
   </div>
 </section>
 <div class="error" id="error"></div>
 
-<!-- Elemen Audio untuk Kesan Bunyi Buka dan Lagu Latar Romantik -->
 <audio id="openEffect" src="assets/open_effect.mp3" preload="auto"></audio>
 <audio id="bgSound" src="assets/bg_sound.mp3" loop preload="auto"></audio>
 
@@ -152,8 +151,8 @@
   const backLight = new THREE.PointLight(0xc46b94, 2.6, 80); backLight.position.set(0,2,-65); scene.add(backLight);
 
   const pages = [
-    {z:0, name:'Ayu & Danial', kicker:'MULA PERJALANAN', desc:'Skrol perlahan untuk melalui gerbang dan membuka setiap babak jemputan.', background:['download (4).jpg','assets/invitation-cover-bg.jpg'], kind:'cover'},
-    {z:-30, name:'Lokasi Majlis', kicker:'BABAK 02 · LOKASI', desc:'Lorong Haji Hassan, Jalan Kampung Parit Sempadan Laut. Simpan lokasi dan hubungi keluarga jika perlukan bantuan.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'location'},
+    {z:0, name:'Ayu & Danial', kicker:'MULA PERJALANAN', desc:'Skrol perlahan keatas untuk melalui gerbang dan membuka setiap babak jemputan.', background:['download (4).jpg','assets/invitation-cover-bg.jpg'], kind:'cover'},
+    {z:-30, name:'Lokasi Majlis', kicker:'BABAK 02 · LOKASI', desc:'Simpan lokasi dan hubungi keluarga jika perlukan bantuan.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'location'},
     {z:-60, name:'Jemputan Rasmi', kicker:'BABAK 03 · JEMPUTAN', desc:'Dengan penuh kesyukuran, kami menjemput keluarga dan sahabat meraikan hari bahagia Ayu & Danial.', background:['download (5).jpg','assets/invitation-detail-bg.jpg'], kind:'invite'},
     {z:-90, name:'Sampai Bertemu', kicker:'BABAK 04 · PENUTUP', desc:'Terima kasih kerana menjadi sebahagian daripada perjalanan istimewa ini.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'ending'}
   ];
