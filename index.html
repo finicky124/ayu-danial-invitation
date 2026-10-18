@@ -903,7 +903,7 @@
       document.getElementById('chapterKicker').textContent=['BABAK 1 · PERMULAAN','BABAK 2 · JEMPUTAN','BABAK 3 · LOKASI','BABAK 4 · PENUTUP'][chapter];
       document.getElementById('chapterTitle').textContent=pages[chapter].name;
       document.getElementById('chapterDesc').textContent=pages[chapter].desc;
-      document.getElementById('locationLink').style.display=chapter===1?'inline-flex':'none';
+      document.getElementById('locationLink').style.display=chapter===2?'inline-flex':'none';
       document.querySelectorAll('.chapter-dot').forEach((el,i)=>el.classList.toggle('active',i===chapter));
       const prev = document.getElementById('prevChapter');
       const next = document.getElementById('nextChapter');
