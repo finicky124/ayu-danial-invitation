@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walimatulurus Ayu &amp; Danial — 3D Scroll Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--rose:#d88aa8;--rose-light:#f8dce7;--gold:#e8c891;--ink:#3a1929;--cream:#fff8f4}
+  *{box-sizing:border-box}
+  html{background:var(--ink);scroll-behavior:auto}
+  body{margin:0;color:var(--cream);background:var(--ink);font-family:'Cormorant Garamond',serif;overflow-x:hidden}
+  body.waiting{overflow:hidden;height:100vh}
+  .journey{height:720vh;position:relative;isolation:isolate;background:#3a1929}
+  .stage{height:100vh;height:100svh;position:sticky;top:0;overflow:hidden;isolation:isolate}
+
+  .bg-environment{
+    position:absolute;
+    inset:-35px;
+    z-index:0;
+    background-image:url('background.jpg'), url('assets/background.jpg');
+    background-size:cover;
+    background-position:center;
+    filter:blur(2.5px) brightness(0.92) contrast(0.96) saturate(0.85) sepia(0.22) hue-rotate(295deg);
+    transform:scale(1.08);
+    pointer-events:none;
+  }
+  .bg-tint{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background:
+      radial-gradient(ellipse at 50% 42%, rgba(240, 180, 202, 0.22) 0%, rgba(138, 62, 92, 0.48) 60%, rgba(62, 24, 43, 0.72) 100%),
+      linear-gradient(180deg, rgba(105, 44, 70, 0.35) 0%, rgba(175, 96, 128, 0.24) 50%, rgba(78, 30, 52, 0.58) 100%);
+    mix-blend-mode:multiply;
+    pointer-events:none;
+  }
+  .bg-palette-wash{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background:rgba(185, 98, 132, 0.28);
+    mix-blend-mode:color;
+    pointer-events:none;
+  }
+
+  #webgl{position:absolute;inset:0;width:100%;height:100%;display:block;outline:none;z-index:1;background:transparent}
+  .vignette,.grain{position:absolute;inset:0;pointer-events:none}
+  .vignette{z-index:2;background:radial-gradient(ellipse at center,transparent 48%,rgba(52,18,35,.25) 80%,rgba(34,11,23,.58) 100%)}
+  .grain{z-index:2;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E")}
+  
+  .topbar{position:absolute;z-index:3;left:clamp(18px,4vw,56px);right:clamp(18px,4vw,56px);top:clamp(16px,3vh,30px);display:flex;align-items:center;justify-content:space-between;gap:20px;text-transform:uppercase;letter-spacing:.18em;font:11px/1.5 'Inter', sans-serif;color:rgba(255,244,247,.92);text-shadow:0 2px 10px rgba(38,12,25,.6)}
+  .brand{display:flex;align-items:center;gap:12px}.brand-mark{width:27px;height:27px;border:1px solid rgba(232,200,145,.85);border-radius:50%;display:grid;place-items:center;color:var(--gold);font:italic 17px 'Great Vibes',cursive;letter-spacing:0;background:rgba(70,25,45,.45)}.brand strong{font-weight:600;letter-spacing:.2em;color:#fff5f7}
+  .top-counter{font-family:'Inter', sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;white-space:nowrap}
+
+  .chapter-note{position:absolute;z-index:3;left:clamp(18px,4vw,56px);bottom:clamp(80px,11vh,120px);max-width:min(360px,60vw);pointer-events:none;text-shadow:0 2px 18px rgba(35,10,22,.75)}
+  .chapter-kicker{color:var(--gold);font-size:10px;text-transform:uppercase;letter-spacing:.25em;margin-bottom:10px}
+  .chapter-title{font:400 clamp(30px,4.1vw,56px)/.98 'Great Vibes',cursive;margin:0 0 12px;color:#fff2f6;text-wrap:balance}
+  .chapter-desc{font:500 12px/1.7 'Cormorant Garamond',serif;letter-spacing:.08em;color:rgba(255,245,248,.88);max-width:285px}
+  .location-link{display:none;width:max-content;margin-top:15px;padding:10px 16px;border:1px solid rgba(232,200,145,.8);border-radius:999px;color:#fff2f6;background:rgba(82,30,54,.72);font:600 10px 'Cormorant Garamond',serif;letter-spacing:.16em;text-decoration:none;text-transform:uppercase;pointer-events:auto;backdrop-filter:blur(8px);transition:background .25s,transform .25s}.location-link:hover{background:rgba(128,52,83,.9);transform:translateY(-2px)}
+  .progress-wrap{position:absolute;z-index:3;left:clamp(18px,4vw,56px);right:clamp(18px,4vw,56px);bottom:26px;display:flex;align-items:center;gap:16px}
+  .progress-line{height:1px;flex:1;background:rgba(255,232,239,.3);position:relative;overflow:visible}
+  .progress-fill{height:2px;position:absolute;left:0;top:-.5px;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));box-shadow:0 0 12px rgba(232,200,145,.65)}
+  .progress-label{font-family:'Inter', sans-serif;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,242,246,.8);white-space:nowrap;text-shadow:0 1px 8px rgba(35,10,22,.6)}
+
+  .scroll-hint{position:absolute;z-index:3;right:clamp(18px,4vw,56px);bottom:clamp(80px,11vh,120px);display:flex;align-items:center;gap:9px;writing-mode:vertical-rl;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,242,246,.82);text-shadow:0 1px 8px rgba(35,10,22,.6)}
+  .scroll-hint .chevron{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);animation:hint 1.7s ease-in-out infinite}
+  @keyframes hint{0%,100%{transform:scaleY(.65);transform-origin:top;opacity:.5}50%{transform:scaleY(1);opacity:1}}
+  .chapter-dots{display:flex;gap:5px;align-items:center}.chapter-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,233,241,.4);transition:transform .4s,background .4s}.chapter-dot.active{background:var(--gold);transform:scale(1.6)}
+  .curtain{position:fixed;inset:0;z-index:20;display:grid;place-items:center;overflow:hidden;background:transparent;transition:visibility .8s}
+  .curtain.hidden{visibility:hidden;pointer-events:none}
+  .curtain-panel{position:absolute;top:0;height:100%;height:100svh;width:51%;background:radial-gradient(ellipse at 50% 45%,rgba(235,172,195,.25),transparent 55%),linear-gradient(135deg,#783152,#3c162d 70%);transition:transform 1.6s cubic-bezier(.72,0,.18,1);box-shadow:0 0 70px rgba(0,0,0,.38)}
+  .curtain-panel:before,.curtain-panel:after{content:"";position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(transparent,rgba(232,200,145,.65),transparent)}
+  .curtain-left{left:0;border-right:1px solid rgba(232,200,145,.45)}.curtain-left:after{right:28px}.curtain-right{right:0;border-left:1px solid rgba(232,200,145,.45)}.curtain-right:before{left:28px}
+  .curtain.opened .curtain-left{transform:translateX(-102%)}.curtain.opened .curtain-right{transform:translateX(102%)}
+  .welcome{position:relative;z-index:2;width:min(420px,calc(100vw - 36px));padding:42px 28px 38px;text-align:center;color:#5a243e;background:rgba(255,247,247,.96);border:1px solid #e8c891;box-shadow:0 24px 80px rgba(0,0,0,.3);transition:opacity .45s,transform .55s}
+  .curtain.opened .welcome{opacity:0;transform:scale(.92)}
+  .welcome:before{content:"";position:absolute;inset:8px;border:1px solid rgba(168,78,112,.3);pointer-events:none}
+  .welcome-kicker{position:relative;letter-spacing:.28em;font-size:10px;font-weight:700;margin:0 0 15px;color:#8e4965}
+  .welcome-names{position:relative;margin:0 0 5px;font:400 clamp(48px,12vw,68px)/.95 'Great Vibes',cursive;color:#9a4268}
+  .welcome-date{position:relative;font-family:'Inter', sans-serif;letter-spacing:.15em;font-weight:500;font-size:13px;margin:18px 0 25px;color:#7e3b58}
+  .open-btn{position:relative;border:1px solid #e8c891;background:linear-gradient(135deg,#a84f73,#702744);color:white;padding:13px 27px;border-radius:99px;font:600 11px 'Cormorant Garamond',serif;letter-spacing:.21em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 22px rgba(112,39,68,.22);transition:transform .25s,box-shadow .25s}
+  .open-btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(112,39,68,.3)}
+  .welcome-note{position:relative;margin:18px 0 0;font-size:11px;letter-spacing:.08em;color:#976c7c}
+  .error{position:fixed;z-index:50;inset:auto 16px 16px;padding:15px 18px;background:#fff8f4;color:#5c263a;border:1px solid #e8c891;border-radius:12px;font-size:14px;display:none}
+  .error.show{display:block}
+  @media(max-width:650px){.chapter-note{bottom:86px;max-width:70vw}.chapter-title{font-size:40px}.chapter-desc{font-size:11px;max-width:230px}.scroll-hint{right:18px;bottom:87px}.topbar{letter-spacing:.12em}.brand strong{letter-spacing:.14em}.top-counter{font-size:10px}.progress-wrap{bottom:18px}.progress-label{font-size:9px}}
+  @media(prefers-reduced-motion:reduce){.scroll-hint .chevron{animation:none}}
+</style>
+</head>
+<body class="waiting">
+<div class="curtain" id="curtain" aria-label="Buka jemputan">
+  <div class="curtain-panel curtain-left"></div><div class="curtain-panel curtain-right"></div>
+  <div class="welcome">
+    <p class="welcome-kicker">WALIMATULURUS</p>
+    <h1 class="welcome-names">Ayu &amp; Danial</h1>
+    <p class="welcome-date">02 · 01 · 2027</p>
+    <button class="open-btn" id="openBtn">Buka Undangan</button>
+    <p class="welcome-note">Satu perjalanan istimewa bermula di sini</p>
+  </div>
+</div>
+<section class="journey" id="journey" aria-label="Perjalanan jemputan 3D">
+  <div class="stage">
+    <div class="bg-environment" id="bgEnv"></div>
+    <div class="bg-tint"></div>
+    <div class="bg-palette-wash"></div>
+
+    <canvas id="webgl" aria-label="Adegan jemputan 3D dengan kamera bergerak mengikut scroll"></canvas>
+    <div class="vignette"></div><div class="grain"></div>
+    <div class="topbar"><div class="brand"><span class="brand-mark">A</span><strong>AYU <span style="color:var(--gold)">×</span> DANIAL</strong></div><div class="top-counter"><span id="chapterNum">01</span> <span style="color:var(--gold)">/</span> 04 &nbsp;·&nbsp; 02 JAN 2027</div></div>
+    <div class="chapter-note"><div class="chapter-kicker" id="chapterKicker">MULA PERJALANAN</div><h2 class="chapter-title" id="chapterTitle">Ayu &amp; Danial</h2><p class="chapter-desc" id="chapterDesc">Skrol perlahan untuk melalui gerbang dan membuka setiap babak jemputan.</p><a class="location-link" id="locationLink" href="https://maps.app.goo.gl/35REVG1qtnf4qi9Y9" target="_blank" rel="noopener noreferrer">Buka Google Maps ↗</a></div>
+    <div class="scroll-hint" id="scrollHint"><span>SCROLL UNTUK TERUSKAN</span><span class="chevron"></span></div>
+    <div class="progress-wrap"><div class="progress-label">PERJALANAN</div><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div><div class="chapter-dots" aria-hidden="true"><span class="chapter-dot active"></span><span class="chapter-dot"></span><span class="chapter-dot"></span><span class="chapter-dot"></span></div><div class="progress-label" id="progressPct">00%</div></div>
+  </div>
+</section>
+<div class="error" id="error"></div>
+
+<!-- Elemen Audio untuk Kesan Bunyi Buka dan Lagu Latar Romantik -->
+<audio id="openEffect" src="assets/open_effect.mp3" preload="auto"></audio>
+<audio id="bgSound" src="assets/bg_sound.mp3" loop preload="auto"></audio>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(() => {
+  const errorBox = document.getElementById('error');
+  function showError(message){ errorBox.textContent = message; errorBox.classList.add('show'); }
+  if (!window.THREE || !window.gsap || !window.ScrollTrigger) {
+    showError('Enjin 3D tidak dapat dimuatkan. Semak sambungan internet, kemudian buka semula fail ini.');
+    return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+
+  const canvas = document.getElementById('webgl');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x522338, 0.0078);
+  const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 260);
+  camera.position.set(0,0,34);
+
+  scene.add(new THREE.HemisphereLight(0xffeaf0, 0x421c2e, 1.75));
+  const keyLight = new THREE.PointLight(0xffcde0, 2.5, 65); keyLight.position.set(-5,7,11); scene.add(keyLight);
+  const goldLight = new THREE.PointLight(0xffe0a8, 2.1, 52); goldLight.position.set(7,-4,-22); scene.add(goldLight);
+  const backLight = new THREE.PointLight(0xc46b94, 2.6, 80); backLight.position.set(0,2,-65); scene.add(backLight);
+
+  const pages = [
+    {z:0, name:'Ayu & Danial', kicker:'MULA PERJALANAN', desc:'Skrol perlahan untuk melalui gerbang dan membuka setiap babak jemputan.', background:['download (4).jpg','assets/invitation-cover-bg.jpg'], kind:'cover'},
+    {z:-30, name:'Lokasi Majlis', kicker:'BABAK 02 · LOKASI', desc:'Lorong Haji Hassan, Jalan Kampung Parit Sempadan Laut. Simpan lokasi dan hubungi keluarga jika perlukan bantuan.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'location'},
+    {z:-60, name:'Jemputan Rasmi', kicker:'BABAK 03 · JEMPUTAN', desc:'Dengan penuh kesyukuran, kami menjemput keluarga dan sahabat meraikan hari bahagia Ayu & Danial.', background:['download (5).jpg','assets/invitation-detail-bg.jpg'], kind:'invite'},
+    {z:-90, name:'Sampai Bertemu', kicker:'BABAK 04 · PENUTUP', desc:'Terima kasih kerana menjadi sebahagian daripada perjalanan istimewa ini.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'ending'}
+  ];
+  const pageMeshes = [];
+  const gateGroups = [];
+  const floating = [];
+  const textureLoader = new THREE.TextureLoader();
+  const imageCache = new Map();
+  const W = 900, H = 1600;
+  const rose = '#9a4168', burgundy = '#5e2940', gold = '#9a703d', ink = '#4c2938';
+
+  const customTextures = {
+    flower: null,
+    flora: null,
+    pearlFlower: null,
+    sakura: null,
+    goldButterflyLeft: null,
+    goldButterflyRight: null,
+    pinkButterflyLeft: null,
+    pinkButterflyRight: null,
+    pearl: null,
+    mapImg: null
+  };
+
+  function loadImage(src){
+    if(imageCache.has(src)) return imageCache.get(src);
+    const promise = new Promise(resolve => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+    imageCache.set(src,promise);
+    return promise;
+  }
+
+  async function loadFirstAvailable(candidates){
+    const list = Array.isArray(candidates) ? candidates : [candidates];
+    for(const src of list){
+      const img = await loadImage(src);
+      if(img) return img;
+    }
+    return null;
+  }
+
+  function createCleanTexture(img, removeWhiteBg = false){
+    if(!img) return null;
+    const c = document.createElement('canvas');
+    c.width = img.width;
+    c.height = img.height;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    if(removeWhiteBg){
+      try {
+        const imgData = ctx.getImageData(0, 0, c.width, c.height);
+        const d = imgData.data;
+        for(let i = 0; i < d.length; i += 4){
+          const r = d[i], g = d[i+1], b = d[i+2];
+          const max = Math.max(r, g, b);
+          const min = Math.min(r, g, b);
+          const sat = max - min;
+          if(r > 234 && g > 234 && b > 234 && sat < 24){
+            d[i+3] = 0;
+          } else if(r > 212 && g > 212 && b > 212 && sat < 32){
+            const fade = Math.max(0, Math.min(1, (240 - (r + g + b) / 3) / 28));
+            d[i+3] = Math.round(d[i+3] * fade);
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+      } catch(e) {}
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.encoding = THREE.sRGBEncoding;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  function createGlowingStarPearlTexture(img){
+    const size = 128;
+    const c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    const ctx = c.getContext('2d');
+
+    const grad = ctx.createRadialGradient(size/2, size/2, size*0.08, size/2, size/2, size*0.5);
+    grad.addColorStop(0, 'rgba(255, 250, 252, 0.96)');
+    grad.addColorStop(0.45, 'rgba(250, 222, 234, 0.5)');
+    grad.addColorStop(1, 'rgba(248, 215, 228, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+
+    if(img){
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(size/2, size/2, size*0.26, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(img, size*0.24, size*0.24, size*0.52, size*0.52);
+      ctx.restore();
+    }
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.encoding = THREE.sRGBEncoding;
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  function createButterflyWingTextures(img, removeWhite = false){
+    if(!img) return { left: null, right: null };
+    const cleanCanvas = document.createElement('canvas');
+    cleanCanvas.width = img.width;
+    cleanCanvas.height = img.height;
+    const cleanCtx = cleanCanvas.getContext('2d');
+    cleanCtx.drawImage(img, 0, 0);
+
+    if(removeWhite){
+      try {
+        const imgData = cleanCtx.getImageData(0, 0, cleanCanvas.width, cleanCanvas.height);
+        const d = imgData.data;
+        for(let i = 0; i < d.length; i += 4){
+          const r = d[i], g = d[i+1], b = d[i+2];
+          if(r > 236 && g > 236 && b > 236 && (Math.max(r,g,b) - Math.min(r,g,b)) < 20){
+            d[i+3] = 0;
+          }
+        }
+        cleanCtx.putImageData(imgData, 0, 0);
+      } catch(e) {}
+    }
+
+    const halfW = Math.max(1, Math.floor(img.width / 2));
+    const h = img.height;
+
+    const cLeft = document.createElement('canvas');
+    cLeft.width = halfW; cLeft.height = h;
+    cLeft.getContext('2d').drawImage(cleanCanvas, 0, 0, halfW, h, 0, 0, halfW, h);
+
+    const cRight = document.createElement('canvas');
+    cRight.width = halfW; cRight.height = h;
+    cRight.getContext('2d').drawImage(cleanCanvas, halfW, 0, img.width - halfW, h, 0, 0, halfW, h);
+
+    const texL = new THREE.CanvasTexture(cLeft);
+    const texR = new THREE.CanvasTexture(cRight);
+    texL.encoding = THREE.sRGBEncoding;
+    texR.encoding = THREE.sRGBEncoding;
+    texL.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    texR.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return { left: texL, right: texR };
+  }
+
+  async function preloadCustomElements(){
+    const [flowerImg, floraImg, pearlFlowerImg, sakuraImg, goldBfImg, pinkBfImg, mutiaraImg, locImg] = await Promise.all([
+      loadFirstAvailable(['flower_2.png', 'flower.png', 'assets/flower_2.png', 'assets/flower.png']),
+      loadFirstAvailable(['flora_2.jpg', 'flora.jpg', 'assets/flora_2.jpg', 'assets/flora.jpg']),
+      loadFirstAvailable(['pearl-flower_2.jpg', 'pearl-flower.jpg', 'assets/pearl-flower_2.jpg', 'assets/pearl-flower.jpg']),
+      loadFirstAvailable(['sakura.png', 'assets/sakura.png']),
+      loadFirstAvailable(['butterfly_2.png', 'butterfly.png', 'assets/butterfly_2.png', 'assets/butterfly.png']),
+      loadFirstAvailable(['pink-butterfly_2.png', 'pink-butterfly.png', 'assets/pink-butterfly_2.png', 'assets/pink-butterfly.png']),
+      loadFirstAvailable(['mutiara_3.png', 'mutiara_2.png', 'mutiara.png', 'assets/mutiara_3.png', 'assets/mutiara_2.png', 'assets/mutiara.png']),
+      loadFirstAvailable(['location_2.png', 'location.png', 'assets/location_2.png', 'assets/location.png'])
+    ]);
+
+    customTextures.flower = createCleanTexture(flowerImg, false);
+    customTextures.flora = createCleanTexture(floraImg, true);
+    customTextures.pearlFlower = createCleanTexture(pearlFlowerImg, true);
+    customTextures.sakura = createCleanTexture(sakuraImg, true);
+    customTextures.pearl = createGlowingStarPearlTexture(mutiaraImg);
+    customTextures.mapImg = locImg;
+
+    const goldWings = createButterflyWingTextures(goldBfImg, false);
+    customTextures.goldButterflyLeft = goldWings.left;
+    customTextures.goldButterflyRight = goldWings.right;
+
+    const pinkWings = createButterflyWingTextures(pinkBfImg, true);
+    customTextures.pinkButterflyLeft = pinkWings.left;
+    customTextures.pinkButterflyRight = pinkWings.right;
+  }
+
+  function roundedPath(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+  function centered(ctx,text,y,font,color=ink){ctx.font=font;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,W/2,y);}
+  function divider(ctx,y,w=190){ctx.save();ctx.strokeStyle='rgba(151,105,61,.72)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(W/2-w/2,y);ctx.lineTo(W/2+w/2,y);ctx.stroke();ctx.fillStyle='#c8a36b';ctx.beginPath();ctx.arc(W/2,y,4,0,Math.PI*2);ctx.fill();ctx.restore();}
+
+  function drawMapMark(ctx,y){
+    if(customTextures.mapImg){
+      const img = customTextures.mapImg;
+      const maxW = 680, maxH = 460;
+      const ratio = Math.min(maxW / img.width, maxH / img.height);
+      const w = img.width * ratio;
+      const h = img.height * ratio;
+      ctx.save();
+      ctx.drawImage(img, (W - w) / 2, y - h / 2, w, h);
+      ctx.restore();
+      return;
+    }
+    ctx.save(); ctx.translate(W/2,y); ctx.strokeStyle='rgba(140,64,95,.38)';ctx.lineWidth=4;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(-230,55);ctx.bezierCurveTo(-160,-20,-120,70,-35,16);ctx.bezierCurveTo(35,-40,80,66,215,-10);ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,32,0,Math.PI*2);ctx.fillStyle='rgba(245,219,228,.9)';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#9a4168';ctx.stroke();
+    ctx.restore();
+  }
+
+  async function buildTexture(page,index){
+    const canvasTex = document.createElement('canvas'); canvasTex.width=W; canvasTex.height=H;
+    const ctx=canvasTex.getContext('2d'); const bg=await loadFirstAvailable(page.background);
+    ctx.save(); roundedPath(ctx,11,11,W-22,H-22,28); ctx.clip(); if(bg)ctx.drawImage(bg,0,0,W,H); else {ctx.fillStyle='#f6e9e6';ctx.fillRect(0,0,W,H);} ctx.restore();
+    const frame=document.createElement('canvas'); frame.width=W; frame.height=H; const f=frame.getContext('2d');
+    f.clearRect(0,0,W,H); roundedPath(f,11,11,W-22,H-22,28); f.lineWidth=5;f.strokeStyle='rgba(191,145,83,.85)';f.stroke();roundedPath(f,24,24,W-48,H-48,22);f.lineWidth=2;f.strokeStyle='rgba(255,250,247,.86)';f.stroke();
+    ctx.save();
+    if(page.kind==='cover'){
+      centered(ctx,'W A L I M A T U L U R U S',480,'600 25px "Cormorant Garamond", serif',burgundy);
+      centered(ctx,'Ayu',605,'400 112px "Great Vibes", cursive',rose);
+      centered(ctx,'&',685,'italic 42px "Playfair Display", serif','#b27b8d');
+      centered(ctx,'Danial',775,'400 112px "Great Vibes", cursive',rose);
+      divider(ctx,845,168);
+      centered(ctx,'02 . 01 . 2027',898,'600 26px "Inter", sans-serif',burgundy);
+      centered(ctx,'#danikahiayu',948,'italic 28px "Cormorant Garamond", serif','#7f465a');
+      centered(ctx,'Beras kunyit kami taburi,',1010,'italic 27px "Cormorant Garamond", serif',ink);
+      centered(ctx,'Air mawar direnjis wangi;',1048,'italic 27px "Cormorant Garamond", serif',ink);
+      centered(ctx,'Undangan kami setulus hati,',1086,'italic 27px "Cormorant Garamond", serif',ink);
+      centered(ctx,'Harap sudi datang merai.',1124,'italic 27px "Cormorant Garamond", serif',ink);
+    } else if(page.kind==='location'){
+      centered(ctx,'L O K A S I  M A J L I S',310,'700 30px "Playfair Display", serif',burgundy);divider(ctx,346,250);
+      drawMapMark(ctx,600);
+      divider(ctx,850,185);
+      centered(ctx,'SEBARANG PERTANYAAN, SILA HUBUNGI',895,'700 25px "Cormorant Garamond", serif',burgundy);
+      centered(ctx,'013-867 2430  ·  SANIP (AYAH)',948,'600 22px "Inter", sans-serif',ink);
+      centered(ctx,'013-999 0930  ·  LINA (IBU)',990,'600 22px "Inter", sans-serif',ink);
+      centered(ctx,'013-456 8930  ·  RIZAL (ADIK)',1032,'600 22px "Inter", sans-serif',ink);
+      centered(ctx,'013-867 2430  ·  ARILL (ADIK)',1074,'600 22px "Inter", sans-serif',ink);
+      const qr=await loadFirstAvailable(['qrcode.png','assets/qrcode.png']);
+      if(qr){ctx.save();ctx.fillStyle='#fff';ctx.fillRect(390,1130,110,110);ctx.drawImage(qr,398,1138,94,94);ctx.restore();centered(ctx,'IMBAS UNTUK LOKASI',1262,'600 20px "Cormorant Garamond", serif',burgundy);}
+    } else if(page.kind==='invite'){
+      // Assalammualaikum diturunkan sedikit ke bawah
+      centered(ctx,'ASSALAMUALAIKUM WBT & SALAM SEJAHTERA,',410,'700 23px "Cormorant Garamond", serif','#a36a80');
+      centered(ctx,'SANIP BIN HASSAN',458,'700 25px "Cormorant Garamond", serif',ink);
+      centered(ctx,'&',490,'700 bold 23px "Cormorant Garamond", serif',ink);
+      centered(ctx,'NORHASLINA BINTI AHMAD',525,'700 25px "Cormorant Garamond", serif',ink);
+      
+      // Dengan penuh kesyukuran menjemput dinaikkan ke atas
+      centered(ctx,'DENGAN PENUH KESYUKURAN MENJEMPUT',573,'700 23px "Cormorant Garamond", serif','#a36a80');
+      centered(ctx,"DATO’ | DATIN | TUAN | PUAN | ENCIK | CIK",608,'600 23px "Cormorant Garamond", serif','#a36a80');
+      centered(ctx,'KE MAJLIS PERKAHWINAN',643,'700 23px "Cormorant Garamond", serif','#a36a80');
+      divider(ctx,678,160);
+      centered(ctx,'SITI ROHAYU',728,'600 37px "Playfair Display", serif',rose);
+      centered(ctx,'&',788,'italic 36px "Playfair Display", serif','#a36a80');
+      centered(ctx,'DANIAL HAZIQ',848,'600 37px "Playfair Display", serif',rose);
+      divider(ctx,898,160);
+      centered(ctx,'PADA',933,'700 23px "Cormorant Garamond", serif','#a36a80');
+      centered(ctx,'02.01.2027',968,'600 24px "Inter", sans-serif',ink);
+      centered(ctx,'YANG BERTEMPAT DI',1008,'700 23px "Cormorant Garamond", serif','#a36a80');
+      centered(ctx,'LORONG HAJI HASSAN,',1043,'600 25px "Inter", sans-serif',ink);
+      centered(ctx,'JALAN KAMPUNG PARIT SEMPADAN LAUT,',1078,'600 24px "Inter", sans-serif',ink);
+      centered(ctx,'86400 PARIT RAJA, JOHOR',1113,'600 23px "Inter", sans-serif',ink);
+      centered(ctx,'HADIRLAH MEMERIAHKAN HARI BERSEJARAH INI,',1163,'600 22px "Cormorant Garamond", serif','#a36a80');
+      centered(ctx,'MOGA BERSATU DOA DAN RESTU DALAM KASIH ILAHI.',1188,'600 22px "Cormorant Garamond", serif','#a36a80');
+    } else {
+      centered(ctx,'TERIMA KASIH',755,'600 30px "Cormorant Garamond", serif','rgba(103,45,68,.78)');
+      centered(ctx,'SUDI MENJADI SEBAHAGIAN DARIPADA HARI KAMI',800,'500 21px "Cormorant Garamond", serif','rgba(103,45,68,.74)');
+    }
+    ctx.restore();
+    ctx.drawImage(frame,0,0);
+    const texture=new THREE.CanvasTexture(canvasTex); texture.encoding=THREE.sRGBEncoding; texture.anisotropy=renderer.capabilities.getMaxAnisotropy(); texture.needsUpdate=true;
+    return texture;
+  }
+
+  // ================= ELEMEN HIDUP (BUNGA DIHIDUPKAN SEMULA) =================
+
+  function addStarPearl(x, y, z, r = 0.08){
+    if(!customTextures.pearl) return null;
+    const mat = new THREE.SpriteMaterial({
+      map: customTextures.pearl,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false
+    });
+    const sprite = new THREE.Sprite(mat);
+    const baseScale = r * 4.5;
+    sprite.scale.set(baseScale, baseScale, 1);
+    sprite.position.set(x, y, z);
+    scene.add(sprite);
+
+    floating.push({
+      mesh: sprite,
+      baseY: y,
+      baseScale,
+      phase: Math.random() * Math.PI * 2,
+      twinkleSpeed: 1.8 + Math.random() * 2.8,
+      floatSpeed: 0.25 + Math.random() * 0.45,
+      kind: 'starPearl'
+    });
+    return sprite;
+  }
+
+  // Menghidupkan semula bunga dengan animasi mengembang dan mengecut (blooming pulse)
+  function addFlower(x, y, z, size = 0.36, variant = 'flower'){
+    const group = new THREE.Group();
+    group.position.set(x, y, z);
+
+    let tex = customTextures.flower;
+    if(variant === 'flora' && customTextures.flora) tex = customTextures.flora;
+    else if(variant === 'pearlFlower' && customTextures.pearlFlower) tex = customTextures.pearlFlower;
+    else if(variant === 'sakura' && customTextures.sakura) tex = customTextures.sakura;
+
+    const d = size * 3.1;
+    if(tex){
+      const mat = new THREE.MeshBasicMaterial({
+        map: tex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        alphaTest: 0.03
+      });
+      const plane = new THREE.Mesh(new THREE.PlaneGeometry(d, d), mat);
+      group.add(plane);
+    }
+
+    scene.add(group);
+
+    floating.push({
+      mesh: group,
+      baseY: y,
+      phase: Math.random() * Math.PI * 2,
+      speed: 1.4 + Math.random() * 0.6,
+      kind: 'bloomFlower'
+    });
+    return group;
+  }
+
+  function addButterfly(x, y, z, scale = 0.9, opts = {}){
+    const type = opts.type || (Math.random() > 0.45 ? 'gold' : 'pink');
+    const dir = opts.dir || (Math.random() > 0.5 ? 'left' : 'right');
+    const perched = Boolean(opts.perched);
+
+    const group = new THREE.Group();
+    group.position.set(x, y, z);
+
+    const dirSign = dir === 'left' ? 1 : -1;
+    group.scale.set(scale * dirSign, scale, scale);
+
+    const baseTilt = opts.tilt !== undefined ? opts.tilt : (dir === 'left' ? 0.28 : -0.28);
+    group.rotation.z = baseTilt;
+
+    const texL = type === 'pink' && customTextures.pinkButterflyLeft ? customTextures.pinkButterflyLeft : customTextures.goldButterflyLeft;
+    const texR = type === 'pink' && customTextures.pinkButterflyRight ? customTextures.pinkButterflyRight : customTextures.goldButterflyRight;
+
+    if(texL && texR){
+      const wingW = 0.52, wingH = 0.76;
+
+      const leftGeo = new THREE.PlaneGeometry(wingW, wingH);
+      leftGeo.translate(-wingW / 2, 0, 0);
+      const leftMat = new THREE.MeshBasicMaterial({map:texL, transparent:true, side:THREE.DoubleSide, depthWrite:false, alphaTest:0.03});
+      const left = new THREE.Mesh(leftGeo, leftMat);
+
+      const rightGeo = new THREE.PlaneGeometry(wingW, wingH);
+      rightGeo.translate(wingW / 2, 0, 0);
+      const rightMat = new THREE.MeshBasicMaterial({map:texR, transparent:true, side:THREE.DoubleSide, depthWrite:false, alphaTest:0.03});
+      const right = new THREE.Mesh(rightGeo, rightMat);
+
+      group.add(left, right);
+      group.userData = {left, right};
+    }
+
+    scene.add(group);
+    floating.push({
+      mesh: group,
+      baseX: x,
+      baseY: y,
+      baseTilt,
+      perched,
+      phase: Math.random() * Math.PI * 2,
+      speed: perched ? (0.45 + Math.random() * 0.25) : (0.85 + Math.random() * 0.65),
+      flapSpeed: perched ? (4.2 + Math.random() * 1.5) : (8.5 + Math.random() * 2.0),
+      kind: 'butterfly'
+    });
+    return group;
+  }
+
+  function addGateBouquetTopRight(curve, z){
+    const layout = [
+      { t: 0.74, size: 0.52, variant: 'flower', dx: 0, dy: 0, dz: 0.20 },
+      { t: 0.70, size: 0.38, variant: 'flora', dx: -0.16, dy: -0.10, dz: 0.16 },
+      { t: 0.78, size: 0.40, variant: 'flora', dx: 0.12, dy: 0.08, dz: 0.17 },
+      { t: 0.67, size: 0.32, variant: 'pearlFlower', dx: 0.08, dy: 0.14, dz: 0.22 },
+      { t: 0.81, size: 0.34, variant: 'pearlFlower', dx: -0.10, dy: -0.12, dz: 0.22 }
+    ];
+    layout.forEach(item => {
+      const p = curve.getPoint(item.t);
+      addFlower(p.x + item.dx, p.y + item.dy, z + item.dz, item.size, item.variant);
+    });
+
+    const pPerch = curve.getPoint(0.73);
+    addButterfly(pPerch.x - 0.12, pPerch.y + 0.35, z + 0.34, 0.65, { type: 'pink', dir: 'left', perched: true, tilt: 0.18 });
+  }
+
+  function addGateBouquetBottomLeft(curve, z){
+    const layout = [
+      { t: 0.15, size: 0.54, variant: 'flower', dx: 0, dy: 0, dz: 0.20 },
+      { t: 0.11, size: 0.40, variant: 'flora', dx: 0.14, dy: -0.08, dz: 0.16 },
+      { t: 0.19, size: 0.38, variant: 'flora', dx: -0.12, dy: 0.10, dz: 0.17 },
+      { t: 0.13, size: 0.32, variant: 'pearlFlower', dx: -0.18, dy: 0.12, dz: 0.22 },
+      { t: 0.17, size: 0.30, variant: 'pearlFlower', dx: 0.18, dy: -0.10, dz: 0.22 }
+    ];
+    layout.forEach(item => {
+      const p = curve.getPoint(item.t);
+      addFlower(p.x + item.dx, p.y + item.dy, z + item.dz, item.size, item.variant);
+    });
+
+    const pPerch = curve.getPoint(0.16);
+    addButterfly(pPerch.x + 0.18, pPerch.y + 0.32, z + 0.34, 0.64, { type: 'gold', dir: 'right', perched: true, tilt: -0.18 });
+  }
+
+  function makeGate(z, index){
+    const group = new THREE.Group();
+    group.position.z = z;
+    const points = [[-4.45,-7.0],[-4.45,-4.0],[-4.45,-.2],[-4.38,2.3],[-3.9,4.35],[-2.5,5.9],[0,6.55],[2.5,5.9],[3.9,4.35],[4.38,2.3],[4.45,-.2],[4.45,-4.0],[4.45,-7.0]].map(p=>new THREE.Vector3(p[0],p[1],0));
+    const curve = new THREE.CatmullRomCurve3(points);
+    const colors = [0xe8c891,0xd58aae,0xe8c891,0xd58aae];
+    const arch = new THREE.Mesh(new THREE.TubeGeometry(curve,100,.065,10,false),new THREE.MeshStandardMaterial({color:colors[index],metalness:.55,roughness:.27,emissive:colors[index],emissiveIntensity:.16}));
+    group.add(arch);
+    const inner = new THREE.Mesh(new THREE.TubeGeometry(curve,100,.022,8,false),new THREE.MeshBasicMaterial({color:0xffe6ed,transparent:true,opacity:.55}));
+    inner.position.z = -.12;
+    group.add(inner);
+
+    for(let i=0;i<=36;i++){
+      const p = curve.getPoint(i/36);
+      const r = (i%3===0) ? .068 : .042;
+      if(customTextures.pearl){
+        const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:customTextures.pearl, transparent:true, depthWrite:false}));
+        sp.scale.set(r*3.6, r*3.6, 1);
+        sp.position.set(p.x, p.y, p.z + 0.08);
+        group.add(sp);
+      }
+    }
+
+    addGateBouquetTopRight(curve, z);
+    addGateBouquetBottomLeft(curve, z);
+
+    scene.add(group);
+    gateGroups.push(group);
+    return group;
+  }
+
+  function addStarryPearlBackdrop(){
+    const count = 1100;
+    const coords = new Float32Array(count*3);
+    const colors = new Float32Array(count*3);
+    for(let i=0;i<count;i++){
+      coords[i*3] = (Math.random()-.5)*46;
+      coords[i*3+1] = (Math.random()-.5)*42;
+      coords[i*3+2] = Math.random()*155 - 120;
+      const warm = Math.random();
+      colors[i*3] = warm>.5 ? 1 : .95;
+      colors[i*3+1] = warm>.5 ? .88 : .75;
+      colors[i*3+2] = warm>.5 ? .92 : .84;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(coords,3));
+    geo.setAttribute('color',new THREE.BufferAttribute(colors,3));
+    const points = new THREE.Points(geo,new THREE.PointsMaterial({size:.055,vertexColors:true,transparent:true,opacity:.55,depthWrite:false,sizeAttenuation:true}));
+    scene.add(points);
+    floating.push({mesh:points,kind:'dust',phase:0,speed:.03});
+
+    for(let i = 0; i < 170; i++){
+      const z = 18 - Math.random() * 125;
+      let x = (Math.random() - 0.5) * 28;
+      let y = (Math.random() - 0.5) * 22;
+      if(Math.abs(x) < 3.4 && Math.abs(y) < 5.6){
+        x += (x >= 0 ? 3.6 : -3.6);
+      }
+      const r = 0.032 + Math.random() * 0.075;
+      addStarPearl(x, y, z, r);
+    }
+  }
+
+  function addOptionalCoupleImages(){
+    const slots=[{file:'assets/couple_1.png',z:.22,x:-5.05,y:.2},{file:'assets/couple_2.png',z:-29.78,x:5.05,y:-.25},{file:'assets/couple_3.png',z:-59.78,x:-5.05,y:.1}];
+    slots.forEach(slot=>{
+      textureLoader.load(slot.file,tex=>{
+        tex.encoding=THREE.sRGBEncoding;const ratio=(tex.image.width||1)/(tex.image.height||1);const height=2.9;const width=Math.max(1.0,Math.min(2.25,height*ratio));
+        const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false});
+        const mesh=new THREE.Mesh(new THREE.PlaneGeometry(width,height),mat);mesh.position.set(slot.x,slot.y,slot.z);mesh.rotation.y=slot.x<0?.10:-.10;scene.add(mesh);
+      },undefined,()=>{});
+    });
+  }
+
+  function decorateCardEdges(cardZ, offsetX = 0){
+    addFlower(offsetX + 2.85, 5.95, cardZ + 0.19, 0.50, 'flower');
+    addFlower(offsetX + 1.85, 6.28, cardZ + 0.16, 0.36, 'flora');
+    addFlower(offsetX + 3.35, 5.05, cardZ + 0.17, 0.34, 'flora');
+
+    addFlower(offsetX - 2.85, -5.95, cardZ + 0.19, 0.52, 'flower');
+    addFlower(offsetX - 1.82, -6.28, cardZ + 0.16, 0.38, 'flora');
+    addFlower(offsetX - 3.35, -5.02, cardZ + 0.17, 0.34, 'flora');
+
+    addButterfly(offsetX + 2.65, 6.28, cardZ + 0.32, 0.62, { type: 'gold', dir: 'left', perched: true, tilt: 0.20 });
+    addButterfly(offsetX - 2.60, -5.65, cardZ + 0.32, 0.64, { type: 'pink', dir: 'right', perched: true, tilt: -0.20 });
+
+    addButterfly(offsetX - 3.85, 1.35, cardZ + 0.34, 0.70, { type: 'pink', dir: 'right', perched: false, tilt: -0.24 });
+    addButterfly(offsetX + 3.85, -1.25, cardZ + 0.34, 0.72, { type: 'gold', dir: 'left', perched: false, tilt: 0.24 });
+  }
+
+  async function buildScene(){
+    await preloadCustomElements();
+    addStarryPearlBackdrop();
+
+    for(let i=0;i<pages.length;i++){
+      const page=pages[i];const tex=await buildTexture(page,i);
+      const material=new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false,opacity:1});
+      const mesh=new THREE.Mesh(new THREE.PlaneGeometry(7.35,13.067),material);
+      const offsetX = [0,.12,-.1,.12][i];
+      mesh.position.set(offsetX,0,page.z);mesh.renderOrder=2;scene.add(mesh);pageMeshes.push(mesh);
+      decorateCardEdges(page.z, offsetX);
+      makeGate(page.z+7.5,i);
+    }
+    addOptionalCoupleImages();
+
+    for(let i = 0; i < 16; i++){
+      const z = 12 - Math.random() * 108;
+      const isLeft = i % 2 === 0;
+      const x = isLeft ? (-4.8 - Math.random() * 4.2) : (4.8 + Math.random() * 4.2);
+      const y = (Math.random() - 0.5) * 11;
+      addButterfly(x, y, z, 0.46 + Math.random() * 0.32, {
+        type: i % 2 === 0 ? 'pink' : 'gold',
+        dir: isLeft ? 'right' : 'left',
+        perched: false
+      });
+    }
+
+    setupScroll();
+    animate();
+  }
+
+  const scrollState={target:0,current:0};let lastChapter=-1;let mouseX=0,mouseY=0;
+  const bgEnv = document.getElementById('bgEnv');
+  const stops=[0,.28,.51,.74,1];
+  function easedStops(p,arr){
+    for(let i=0;i<arr.length-1;i++)if(p<=arr[i+1]){const a=arr[i],b=arr[i+1],t=THREE.MathUtils.clamp((p-a)/(b-a),0,1);return i+t;}
+    return arr.length-1;
+  }
+  function interpAnchor(p,values){
+    const t=easedStops(p,stops);const i=Math.min(values.length-2,Math.floor(t));const local=t-i;const smooth=local*local*(3-2*local);return THREE.MathUtils.lerp(values[i],values[i+1],smooth);
+  }
+  const camX=[0,.25,-.28,.22,0],camY=[0,-.12,.18,-.1,0];
+  function updateChapter(p){
+    const chapter=p<.20?0:p<.43?1:p<.68?2:3;
+    if(chapter!==lastChapter){
+      lastChapter=chapter;
+      document.getElementById('chapterNum').textContent=String(chapter+1).padStart(2,'0');
+      document.getElementById('chapterKicker').textContent=pages[chapter].kicker;
+      document.getElementById('chapterTitle').textContent=pages[chapter].name;
+      document.getElementById('chapterDesc').textContent=pages[chapter].desc;
+      document.getElementById('locationLink').style.display=chapter===1?'inline-flex':'none';
+      document.querySelectorAll('.chapter-dot').forEach((el,i)=>el.classList.toggle('active',i===chapter));
+      gsap.fromTo('.chapter-note',{opacity:.45,y:10},{opacity:1,y:0,duration:.65,ease:'power2.out'});
+    }
+    document.getElementById('progressFill').style.width=(p*100).toFixed(2)+'%';
+    document.getElementById('progressPct').textContent=Math.round(p*100).toString().padStart(2,'0')+'%';
+    document.getElementById('scrollHint').style.opacity=p>.96?'0':'.92';
+  }
+  function setupScroll(){
+    ScrollTrigger.create({trigger:'#journey',start:'top top',end:'bottom bottom',onUpdate:self=>{scrollState.target=self.progress;updateChapter(self.progress);},onRefresh:self=>{scrollState.target=self.progress;updateChapter(self.progress);}});
+    window.addEventListener('pointermove',e=>{mouseX=(e.clientX/window.innerWidth-.5)*.5;mouseY=(e.clientY/window.innerHeight-.5)*.3;},{passive:true});
+  }
+  const clock=new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const time=clock.getElapsedTime();
+    scrollState.current+=(scrollState.target-scrollState.current)*.075;
+    const p=scrollState.current;
+    camera.position.z=34-150*p;
+    camera.position.x=interpAnchor(p,camX)+mouseX*.22;
+    camera.position.y=interpAnchor(p,camY)-mouseY*.18;
+    camera.lookAt(camera.position.x*.74+mouseX*.2,camera.position.y*.74-mouseY*.15,camera.position.z-18);
+
+    if(bgEnv){
+      const zoom = 1.08 + p * 0.06;
+      const shiftX = -mouseX * 14;
+      const shiftY = -mouseY * 10;
+      bgEnv.style.transform = `translate3d(${shiftX}px, ${shiftY}px, 0) scale(${zoom})`;
+    }
+
+    gateGroups.forEach((gate,i)=>{gate.rotation.z=Math.sin(time*.15+i*.7)*.012;gate.rotation.y=Math.sin(time*.22+i*.8)*.018;});
+
+    floating.forEach((obj)=>{
+      if(obj.kind==='dust'){obj.mesh.rotation.y=time*.004;return;}
+
+      if(obj.kind==='butterfly'){
+        const wings = obj.mesh.userData;
+        if(obj.perched){
+          obj.mesh.position.y = obj.baseY + Math.sin(time * obj.speed + obj.phase) * 0.03;
+          if(wings.left && wings.right){
+            const gentleFlap = 0.15 + Math.sin(time * obj.flapSpeed + obj.phase) * 0.35;
+            wings.left.rotation.y = gentleFlap;
+            wings.right.rotation.y = -gentleFlap;
+          }
+          obj.mesh.rotation.z = obj.baseTilt + Math.sin(time * 0.5 + obj.phase) * 0.03;
+        } else {
+          obj.mesh.position.y = obj.baseY + Math.sin(time * obj.speed + obj.phase) * 0.18;
+          obj.mesh.position.x = obj.baseX + Math.cos(time * (obj.speed * 0.7) + obj.phase) * 0.11;
+          if(wings.left && wings.right){
+            const flap = Math.sin(time * obj.flapSpeed + obj.phase) * 0.65;
+            wings.left.rotation.y = flap;
+            wings.right.rotation.y = -flap;
+          }
+          obj.mesh.rotation.z = obj.baseTilt + Math.sin(time * 0.8 + obj.phase) * 0.07;
+        }
+      } else if(obj.kind==='bloomFlower'){
+        obj.mesh.position.y = obj.baseY + Math.sin(time * 0.6 + obj.phase) * 0.04;
+        const pulse = 1 + Math.sin(time * obj.speed + obj.phase) * 0.10;
+        obj.mesh.scale.set(pulse, pulse, 1);
+      } else if(obj.kind==='pearlFlower'){
+        obj.mesh.position.y = obj.baseY + Math.sin(time * 0.5 + obj.phase) * 0.03;
+        const pulse = 1 + Math.sin(time * obj.speed + obj.phase) * 0.13;
+        obj.mesh.scale.set(pulse, pulse, 1);
+      } else if(obj.kind==='starPearl'){
+        obj.mesh.position.y = obj.baseY + Math.sin(time * obj.floatSpeed + obj.phase) * 0.06;
+        const twinkle = 0.55 + 0.45 * Math.sin(time * obj.twinkleSpeed + obj.phase);
+        const starScale = obj.baseScale * (0.75 + 0.55 * twinkle);
+        obj.mesh.scale.set(starScale, starScale, 1);
+        if(obj.mesh.material){
+          obj.mesh.material.opacity = 0.35 + 0.65 * twinkle;
+        }
+      }
+    });
+    renderer.render(scene,camera);
+  }
+  function resize(){camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));renderer.setSize(window.innerWidth,window.innerHeight,false);ScrollTrigger.refresh();}
+  window.addEventListener('resize',resize,{passive:true});
+  
+  document.getElementById('openBtn').addEventListener('click',()=>{
+    const curtain=document.getElementById('curtain');
+    const openEffect = document.getElementById('openEffect');
+    const bgSound = document.getElementById('bgSound');
+
+    if(openEffect){
+      openEffect.volume = 1.0;
+      openEffect.play().catch(e => console.log("Audio kesan bunyi disekat:", e));
+    }
+
+    if(bgSound){
+      bgSound.volume = 0.6;
+      bgSound.loop = true;
+      bgSound.play().catch(e => console.log("Audio latar disekat:", e));
+    }
+
+    curtain.classList.add('opened');
+    document.body.classList.remove('waiting');
+    window.setTimeout(()=>{
+      curtain.classList.add('hidden');
+      window.scrollTo(0,0);
+      ScrollTrigger.refresh();
+    },1500);
+  });
+
+  document.fonts.ready.then(()=>buildScene()).catch(()=>buildScene());
+})();
+</script>
+</body>
+</html>
