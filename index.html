@@ -215,10 +215,10 @@
   const backLight = new THREE.PointLight(0xc46b94, 2.6, 80); backLight.position.set(0,2,-65); scene.add(backLight);
 
   const pages = [
-    {z:0, name:'Ayu & Danial', kicker:'MULA PERJALANAN', desc:'Menuju destinasi cinta, mahligai bahagia.', background:['download (4).jpg','assets/invitation-cover-bg.jpg'], kind:'cover'},
-    {z:-30, name:'Lokasi Majlis', kicker:'BABAK 02 · LOKASI', desc:'Simpan lokasi dan hubungi keluarga jika ada pertanyaan.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'location'},
-    {z:-60, name:'Jemputan Rasmi', kicker:'BABAK 03 · JEMPUTAN', desc:'Dengan penuh kesyukuran, kami menjemput keluarga dan sahabat meraikan hari bahagia Ayu & Danial.', background:['download (5).jpg','assets/invitation-detail-bg.jpg'], kind:'invite'},
-    {z:-90, name:'Counting Days', kicker:'BABAK 04 · PENUTUP', desc:'Menghitung hari menuju detik bahagia kami pada 02 Januari 2027. Terima kasih atas doa dan kehadiran anda.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'ending'}
+    {z:0, name:'Ayu & Danial', kicker:'MULA PERJALANAN', desc:'Menuju destinasi cinta, mahligai bahagia.', background:['assets/download (4).jpg','assets/invitation-cover-bg.jpg'], kind:'cover'},
+    {z:-30, name:'Lokasi Majlis', kicker:'BABAK 02 · LOKASI', desc:'Simpan lokasi dan hubungi keluarga jika ada pertanyaan.', background:['assets/download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'location'},
+    {z:-60, name:'Jemputan Rasmi', kicker:'BABAK 03 · JEMPUTAN', desc:'Dengan penuh kesyukuran, kami menjemput keluarga dan sahabat meraikan hari bahagia Ayu & Danial.', background:['assets/download (5).jpg','assets/invitation-detail-bg.jpg'], kind:'invite'},
+    {z:-90, name:'Counting Days', kicker:'BABAK 04 · PENUTUP', desc:'Menghitung hari menuju detik bahagia kami pada 02 Januari 2027. Terima kasih atas doa dan kehadiran anda.', background:['assets/download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'ending'}
   ];
   const pageMeshes = [];
   const gateGroups = [];
@@ -1094,7 +1094,7 @@
   const readCardBtn = document.getElementById('readCardBtn');
   const readEntries = [
     {
-      kicker:'BABAK 1 DARIPADA 4 · SAMPUL', title:'Ayu & Danial', content:`
+      kicker:'BABAK 1 DARIPADA 4 · PERMULAAN', title:'Ayu & Danial', content:`
         <p class="modal-date">WALIMATULURUS · 02 JANUARI 2027</p>
         <p><strong>Ayu &amp; Danial</strong></p><p class="modal-date">#danikahiayu</p>
         <p><em>Beras kunyit kami taburi,<br>Air mawar direnjis wangi;<br>Undangan kami setulus hati,<br>Harap sudi datang merai.</em></p>
