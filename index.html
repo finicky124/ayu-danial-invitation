@@ -13,7 +13,7 @@
   html{background:var(--ink);scroll-behavior:auto}
   body{margin:0;color:var(--cream);background:var(--ink);font-family:'Cormorant Garamond',serif;overflow-x:hidden}
   body.waiting{overflow:hidden;height:100vh}
-  .journey{height:720vh;position:relative;isolation:isolate;background:#3a1929}
+  .journey{height:520vh;position:relative;isolation:isolate;background:#3a1929}
   .stage{height:100vh;height:100svh;position:sticky;top:0;overflow:hidden;isolation:isolate}
 
   .bg-environment{
@@ -52,7 +52,7 @@
   .grain{z-index:2;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E")}
   
   .topbar{position:absolute;z-index:3;left:clamp(18px,4vw,56px);right:clamp(18px,4vw,56px);top:clamp(16px,3vh,30px);display:flex;align-items:center;justify-content:space-between;gap:20px;text-transform:uppercase;letter-spacing:.18em;font:11px/1.5 'Inter', sans-serif;color:rgba(255,244,247,.92);text-shadow:0 2px 10px rgba(38,12,25,.6)}
-  .brand{display:flex;align-items:center;gap:12px}.brand-mark{width:27px;height:27px;border:1px solid rgba(232,200,145,.85);border-radius:50%;display:grid;place-items:center;color:var(--gold);font:italic 17px 'Great Vibes',cursive;letter-spacing:0;background:rgba(70,25,45,.45)}.brand strong{font-weight:600;letter-spacing:.2em;color:#fff5f7}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{display:block;width:42px;height:42px;flex:0 0 42px;object-fit:contain;object-position:center;padding:0;margin:0;border:0;border-radius:0;background:transparent!important;box-shadow:none!important;outline:0;filter:none;mix-blend-mode:normal}.brand strong{font-weight:600;letter-spacing:.2em;color:#fff5f7}
   .top-counter{font-family:'Inter', sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;white-space:nowrap}
 
   .chapter-note{position:absolute;z-index:3;left:clamp(18px,4vw,56px);bottom:clamp(80px,11vh,120px);max-width:min(360px,60vw);pointer-events:none;text-shadow:0 2px 18px rgba(35,10,22,.75)}
@@ -65,10 +65,42 @@
   .progress-fill{height:2px;position:absolute;left:0;top:-.5px;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));box-shadow:0 0 12px rgba(232,200,145,.65)}
   .progress-label{font-family:'Inter', sans-serif;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,242,246,.8);white-space:nowrap;text-shadow:0 1px 8px rgba(35,10,22,.6)}
 
-  .scroll-hint{position:absolute;z-index:3;right:clamp(18px,4vw,56px);bottom:clamp(80px,11vh,120px);display:flex;align-items:center;gap:9px;writing-mode:vertical-rl;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,242,246,.82);text-shadow:0 1px 8px rgba(35,10,22,.6)}
-  .scroll-hint .chevron{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);animation:hint 1.7s ease-in-out infinite}
-  @keyframes hint{0%,100%{transform:scaleY(.65);transform-origin:top;opacity:.5}50%{transform:scaleY(1);opacity:1}}
-  .chapter-dots{display:flex;gap:5px;align-items:center}.chapter-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,233,241,.4);transition:transform .4s,background .4s}.chapter-dot.active{background:var(--gold);transform:scale(1.6)}
+  .chapter-dots{display:flex;gap:7px;align-items:center}.chapter-dot{appearance:none;width:8px;height:8px;padding:0;border:1px solid rgba(255,233,241,.66);border-radius:50%;background:rgba(255,233,241,.28);transition:transform .25s,background .25s,border-color .25s;cursor:pointer}.chapter-dot.active{background:var(--gold);border-color:var(--gold);transform:scale(1.35)}
+  .chapter-nav{position:absolute;z-index:4;right:clamp(18px,4vw,56px);bottom:70px;display:flex;align-items:center;gap:8px}
+  .chapter-nav button,.read-card-btn{appearance:none;border:1px solid rgba(232,200,145,.7);border-radius:999px;background:rgba(69,25,48,.82);color:#fff6f8;padding:10px 14px;font:600 10px/1.2 'Inter',sans-serif;letter-spacing:.04em;cursor:pointer;backdrop-filter:blur(8px);transition:background .2s,transform .2s,opacity .2s}
+  .chapter-nav button:hover,.read-card-btn:hover{background:rgba(130,51,83,.95);transform:translateY(-1px)}
+  .chapter-nav button:disabled{opacity:.42;cursor:not-allowed;transform:none}
+  .read-card-btn{display:inline-flex;align-items:center;gap:7px;margin-top:12px;pointer-events:auto;background:rgba(255,245,248,.12)}
+  .read-card-btn:before{content:'▤';font-size:13px;color:var(--gold)}
+  .chapter-note{pointer-events:none}.chapter-note a,.chapter-note button{pointer-events:auto}
+  .read-modal[hidden]{display:none}
+  .read-modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:18px}
+  .read-modal-backdrop{position:absolute;inset:0;background:rgba(27,8,20,.78);backdrop-filter:blur(7px)}
+  .read-modal-card{position:relative;z-index:1;width:min(620px,100%);max-height:min(82svh,760px);overflow:auto;padding:clamp(24px,5vw,42px);background:#fff9f7;color:#4c2938;border:1px solid #dfbd83;box-shadow:0 24px 90px rgba(0,0,0,.38)}
+  .read-modal-kicker{margin:0 36px 9px 0;color:#99516c;font:700 10px/1.5 'Inter',sans-serif;letter-spacing:.18em;text-transform:uppercase}
+  .read-modal-title{margin:0 36px 20px 0;color:#8f3d61;font:500 clamp(32px,6vw,48px)/1.05 'Great Vibes',cursive}
+  .read-modal-content{font:500 17px/1.75 'Cormorant Garamond',serif;color:#4c2938}
+  .read-modal-content p{margin:0 0 13px}.read-modal-content strong{font-weight:700}.read-modal-content .modal-date{font:600 12px/1.8 'Inter',sans-serif;letter-spacing:.08em;color:#8f3d61}
+  .read-modal-content a{display:inline-flex;margin:4px 0 12px;color:#843b5b;text-decoration:underline;text-underline-offset:3px}
+  .read-modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border:1px solid rgba(143,61,97,.25);border-radius:50%;background:#fff;color:#793651;font:24px/1 'Inter',sans-serif;cursor:pointer}
+  .read-modal-actions{display:flex;justify-content:space-between;gap:12px;margin-top:24px;padding-top:16px;border-top:1px solid rgba(143,61,97,.2)}
+  .read-modal-actions button{border:1px solid #cba16a;border-radius:999px;padding:11px 15px;background:#843b5b;color:white;font:600 10px/1.3 'Inter',sans-serif;letter-spacing:.04em;cursor:pointer}
+  .read-modal-actions button:disabled{opacity:.4;cursor:not-allowed}
+  .read-modal-actions .modal-close-secondary{background:transparent;color:#843b5b}
+  .calendar-modal[hidden]{display:none}
+  .calendar-modal{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:18px}
+  .calendar-modal-backdrop{position:absolute;inset:0;background:rgba(27,8,20,.8);backdrop-filter:blur(7px)}
+  .calendar-modal-card{position:relative;z-index:1;width:min(510px,100%);padding:clamp(24px,5vw,38px);background:#fff9f7;color:#4c2938;border:1px solid #dfbd83;box-shadow:0 24px 90px rgba(0,0,0,.38)}
+  .calendar-modal-close{position:absolute;top:13px;right:13px;width:36px;height:36px;border:1px solid rgba(143,61,97,.25);border-radius:50%;background:#fff;color:#793651;font:24px/1 'Inter',sans-serif;cursor:pointer}
+  .calendar-modal-kicker{margin:0 38px 8px 0;color:#99516c;font:700 10px/1.5 'Inter',sans-serif;letter-spacing:.18em;text-transform:uppercase}
+  .calendar-modal-title{margin:0 36px 12px 0;color:#8f3d61;font:500 clamp(32px,6vw,44px)/1.05 'Great Vibes',cursive}
+  .calendar-modal-copy{font:500 15px/1.65 'Cormorant Garamond',serif;color:#4c2938;margin:0 0 12px}
+  .calendar-modal-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
+  .calendar-option-primary,.calendar-option-secondary{display:flex;align-items:center;justify-content:center;min-height:44px;padding:12px 15px;border:1px solid #cba16a;border-radius:999px;background:#843b5b;color:#fff;text-align:center;text-decoration:none;font:600 10px/1.35 'Inter',sans-serif;letter-spacing:.05em;cursor:pointer}
+  .calendar-option-secondary{background:transparent;color:#843b5b}
+  .chapter-nav button.calendar-next{border-color:rgba(255,222,157,.95);background:linear-gradient(135deg,#b45e80,#78324f);box-shadow:0 5px 20px rgba(21,6,16,.25);}
+  .chapter-nav button.calendar-next:hover{background:linear-gradient(135deg,#c36b8d,#8b3e5d)}
+
   .curtain{position:fixed;inset:0;z-index:20;display:grid;place-items:center;overflow:hidden;background:transparent;transition:visibility .8s}
   .curtain.hidden{visibility:hidden;pointer-events:none}
   .curtain-panel{position:absolute;top:0;height:100%;height:100svh;width:51%;background:radial-gradient(ellipse at 50% 45%,rgba(235,172,195,.25),transparent 55%),linear-gradient(135deg,#783152,#3c162d 70%);transition:transform 1.6s cubic-bezier(.72,0,.18,1);box-shadow:0 0 70px rgba(0,0,0,.38)}
@@ -83,11 +115,18 @@
   .welcome-date{position:relative;font-family:'Inter', sans-serif;letter-spacing:.15em;font-weight:500;font-size:13px;margin:18px 0 25px;color:#7e3b58}
   .open-btn{position:relative;border:1px solid #e8c891;background:linear-gradient(135deg,#a84f73,#702744);color:white;padding:13px 27px;border-radius:99px;font:600 11px 'Cormorant Garamond',serif;letter-spacing:.21em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 22px rgba(112,39,68,.22);transition:transform .25s,box-shadow .25s}
   .open-btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(112,39,68,.3)}
-  .welcome-note{position:relative;margin:18px 0 0;font-size:11px;letter-spacing:.08em;color:#976c7c}
+  .welcome-note{position:relative;max-width:300px;margin:18px auto 0;font-size:11px;line-height:1.65;letter-spacing:.035em;color:#976c7c}
   .error{position:fixed;z-index:50;inset:auto 16px 16px;padding:15px 18px;background:#fff8f4;color:#5c263a;border:1px solid #e8c891;border-radius:12px;font-size:14px;display:none}
   .error.show{display:block}
-  @media(max-width:650px){.chapter-note{bottom:86px;max-width:70vw}.chapter-title{font-size:40px}.chapter-desc{font-size:11px;max-width:230px}.scroll-hint{right:18px;bottom:87px}.topbar{letter-spacing:.12em}.brand strong{letter-spacing:.14em}.top-counter{font-size:10px}.progress-wrap{bottom:18px}.progress-label{font-size:9px}}
-  @media(prefers-reduced-motion:reduce){.scroll-hint .chevron{animation:none}}
+  @media(max-width:650px){
+    .chapter-note{bottom:125px;max-width:67vw}.chapter-title{font-size:38px}.chapter-desc{font-size:12px;line-height:1.55;max-width:230px}
+    .chapter-nav{left:18px;right:18px;bottom:53px;justify-content:flex-end;gap:6px}.chapter-nav button{padding:9px 11px;font-size:9px}
+    .topbar{letter-spacing:.12em;gap:10px}.brand{gap:8px}.brand-mark{width:32px;height:32px;flex-basis:32px}.brand strong{letter-spacing:.1em;font-size:10px}.top-counter{font-size:9px;letter-spacing:.08em}.progress-wrap{bottom:16px;gap:10px}.progress-label{font-size:8px;letter-spacing:.08em}.chapter-dots{gap:6px}.chapter-dot{width:7px;height:7px}
+    .read-card-btn{font-size:9px;padding:9px 12px}.read-modal{padding:10px}.read-modal-card{max-height:88svh;padding:26px 20px}.read-modal-content{font-size:16px}.read-modal-actions{gap:8px}.read-modal-actions button{padding:10px 11px;font-size:9px}
+    .calendar-modal{padding:10px}.calendar-modal-card{padding:28px 20px}.calendar-modal-copy{font-size:14px}
+  }
+  @media(max-width:390px){.chapter-note{max-width:65vw}.chapter-nav button{font-size:8px;padding:8px 9px}.progress-wrap{gap:7px}.progress-line{min-width:26px}}
+
 </style>
 </head>
 <body class="waiting">
@@ -97,8 +136,8 @@
     <p class="welcome-kicker">WALIMATULURUS</p>
     <h1 class="welcome-names">Ayu &amp; Danial</h1>
     <p class="welcome-date">02 · 01 · 2027</p>
-    <button class="open-btn" id="openBtn">Buka Undangan</button>
-    <p class="welcome-note">Satu perjalanan istimewa bermula di sini</p>
+    <button class="open-btn" id="openBtn">Mula Perjalanan</button>
+    <p class="welcome-note">Perjalanan istimewa bermula di sini.</p>
   </div>
 </div>
 <section class="journey" id="journey" aria-label="Perjalanan jemputan 3D">
@@ -109,14 +148,39 @@
 
     <canvas id="webgl" aria-label="Adegan jemputan 3D dengan kamera bergerak mengikut scroll"></canvas>
     <div class="vignette"></div><div class="grain"></div>
-    <div class="topbar"><div class="brand"><span class="brand-mark">A</span><strong>AYU <span style="color:var(--gold)">×</span> DANIAL</strong></div><div class="top-counter"><span id="chapterNum">01</span> <span style="color:var(--gold)">/</span> 04 &nbsp;·&nbsp; 02 JAN 2027</div></div>
-    <div class="chapter-note"><div class="chapter-kicker" id="chapterKicker">MULA PERJALANAN</div><h2 class="chapter-title" id="chapterTitle">Ayu &amp; Danial</h2><p class="chapter-desc" id="chapterDesc">Skrol perlahan untuk melalui gerbang dan membuka setiap babak jemputan.</p><a class="location-link" id="locationLink" href="https://maps.app.goo.gl/35REVG1qtnf4qi9Y9" target="_blank" rel="noopener noreferrer">Buka Google Maps</a></div>
-    <div class="scroll-hint" id="scrollHint"><span>SCROLL KE ATAS UNTUK TERUSKAN</span><span class="chevron"></span></div>
-    <div class="progress-wrap"><div class="progress-label">PERJALANAN</div><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div><div class="chapter-dots" aria-hidden="true"><span class="chapter-dot active"></span><span class="chapter-dot"></span><span class="chapter-dot"></span><span class="chapter-dot"></span></div><div class="progress-label" id="progressPct">00%</div></div>
+    <div class="topbar"><div class="brand"><img id="brandLogo" class="brand-mark" src="assets/logo.jpg" alt="Logo Ayu dan Danial" width="42" height="42"><strong>AYU <span style="color:var(--gold)">×</span> DANIAL</strong></div><div class="top-counter"><span id="chapterNum">01</span> <span style="color:var(--gold)">/</span> 04 &nbsp;·&nbsp; 02 JAN 2027</div></div>
+    <div class="chapter-note"><div class="chapter-kicker" id="chapterKicker">BABAK 1 · PERMULAAN</div><h2 class="chapter-title" id="chapterTitle">Ayu &amp; Danial</h2><p class="chapter-desc" id="chapterDesc">Gerakkan perjalanan dengan skrol untuk membaca empat babak jemputan.</p><a class="location-link" id="locationLink" href="https://maps.app.goo.gl/35REVG1qtnf4qi9Y9" target="_blank" rel="noopener noreferrer">Buka Google Maps</a><button class="read-card-btn" id="readCardBtn" type="button">Baca teks kad</button></div>
+    <div class="chapter-nav" aria-label="Navigasi babak"><button type="button" id="prevChapter" disabled>← Kembali</button><button type="button" id="nextChapter">Seterusnya: Lokasi Majlis →</button></div>
+    <div class="progress-wrap"><div class="progress-label">PERJALANAN</div><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div><div class="chapter-dots" id="chapterDots" aria-label="Pilih babak"><button type="button" class="chapter-dot active" data-chapter="0" aria-label="Ke babak 1: Sampul"></button><button type="button" class="chapter-dot" data-chapter="1" aria-label="Ke babak 2: Lokasi majlis"></button><button type="button" class="chapter-dot" data-chapter="2" aria-label="Ke babak 3: Jemputan rasmi"></button><button type="button" class="chapter-dot" data-chapter="3" aria-label="Ke babak 4: Penutup"></button></div><div class="progress-label" id="progressPct">00%</div></div>
   </div>
 </section>
 <div class="error" id="error"></div>
+<div class="read-modal" id="readModal" hidden>
+  <div class="read-modal-backdrop" id="readModalBackdrop"></div>
+  <section class="read-modal-card" id="readModalCard" role="dialog" aria-modal="true" aria-labelledby="readModalTitle" tabindex="-1">
+    <button class="read-modal-close" id="closeReadModal" type="button" aria-label="Tutup butiran kad">×</button>
+    <p class="read-modal-kicker" id="readModalKicker">BABAK 1 DARIPADA 4</p>
+    <h2 class="read-modal-title" id="readModalTitle">Ayu &amp; Danial</h2>
+    <div class="read-modal-content" id="readModalContent"></div>
+    <div class="read-modal-actions"><button class="modal-close-secondary" id="modalPrev" type="button">← Babak sebelumnya</button><button id="modalNext" type="button">Babak seterusnya →</button></div>
+  </section>
+</div>
+<div class="calendar-modal" id="calendarModal" hidden>
+  <div class="calendar-modal-backdrop" id="calendarModalBackdrop"></div>
+  <section class="calendar-modal-card" role="dialog" aria-modal="true" aria-labelledby="calendarModalTitle" tabindex="-1" id="calendarModalCard">
+    <button class="calendar-modal-close" id="closeCalendarModal" type="button" aria-label="Tutup pilihan kalendar">×</button>
+    <p class="calendar-modal-kicker">SIMPAN TARIKH MAJLIS</p>
+    <h2 class="calendar-modal-title" id="calendarModalTitle">Add to Calendar</h2>
+    <p class="calendar-modal-copy">Sabtu, 2 Januari 2027 · 9:00 pagi – 6:00 petang</p>
+    <p class="calendar-modal-copy">Pilih kalendar anda. Google Calendar akan membuka acara yang sudah diisi untuk disimpan. Pilihan .ics boleh dibuka dengan Apple Calendar, Outlook atau aplikasi kalendar lain.</p>
+    <div class="calendar-modal-actions">
+      <a id="googleCalendarLink" class="calendar-option-primary" href="#" target="_blank" rel="noopener noreferrer">Google Calendar ↗</a>
+      <button id="downloadIcsBtn" class="calendar-option-secondary" type="button">Apple / Outlook (.ics) ↓</button>
+    </div>
+  </section>
+</div>
 
+<!-- Elemen Audio untuk Kesan Bunyi Buka dan Lagu Latar Romantik -->
 <audio id="openEffect" src="assets/open_effect.mp3" preload="auto"></audio>
 <audio id="bgSound" src="assets/bg_sound.mp3" loop preload="auto"></audio>
 
@@ -151,10 +215,10 @@
   const backLight = new THREE.PointLight(0xc46b94, 2.6, 80); backLight.position.set(0,2,-65); scene.add(backLight);
 
   const pages = [
-    {z:0, name:'Ayu & Danial', kicker:'MULA PERJALANAN', desc:'Disini bermula babak mahligai cinta mereka.', background:['assets/download (4).jpg','assets/invitation-cover-bg.jpg'], kind:'cover'},
-    {z:-30, name:'Lokasi Majlis', kicker:'BABAK 02 · LOKASI', desc:'Simpan lokasi dan hubungi keluarga jika perlukan bantuan.', background:['assets/download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'location'},
-    {z:-60, name:'Jemputan Rasmi', kicker:'BABAK 03 · JEMPUTAN', desc:'Dengan penuh kesyukuran, kami menjemput keluarga dan sahabat meraikan hari bahagia Ayu & Danial.', background:['assets/download (5).jpg','assets/invitation-detail-bg.jpg'], kind:'invite'},
-    {z:-90, name:'Sampai Bertemu', kicker:'BABAK 04 · PENUTUP', desc:'Terima kasih kerana menjadi sebahagian daripada perjalanan istimewa ini.', background:['assets/download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'ending'}
+    {z:0, name:'Ayu & Danial', kicker:'MULA PERJALANAN', desc:'Menuju destinasi cinta, mahligai bahagia.', background:['download (4).jpg','assets/invitation-cover-bg.jpg'], kind:'cover'},
+    {z:-30, name:'Lokasi Majlis', kicker:'BABAK 02 · LOKASI', desc:'Simpan lokasi dan hubungi keluarga jika ada pertanyaan.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'location'},
+    {z:-60, name:'Jemputan Rasmi', kicker:'BABAK 03 · JEMPUTAN', desc:'Dengan penuh kesyukuran, kami menjemput keluarga dan sahabat meraikan hari bahagia Ayu & Danial.', background:['download (5).jpg','assets/invitation-detail-bg.jpg'], kind:'invite'},
+    {z:-90, name:'Counting Days', kicker:'BABAK 04 · PENUTUP', desc:'Menghitung hari menuju detik bahagia kami pada 02 Januari 2027. Terima kasih atas doa dan kehadiran anda.', background:['download (2).jpg','assets/invitation-detail-bg.jpg'], kind:'ending'}
   ];
   const pageMeshes = [];
   const gateGroups = [];
@@ -163,6 +227,10 @@
   const imageCache = new Map();
   const W = 900, H = 1600;
   const rose = '#9a4168', burgundy = '#5e2940', gold = '#9a703d', ink = '#4c2938';
+
+  // Variabel khusus untuk memperbarui halaman terakhir (Countdown) secara real-time
+  const WEDDING_TARGET = new Date('2027-01-02T00:00:00+08:00').getTime();
+  let endingState = null;
 
   const customTextures = {
     flower: null,
@@ -353,17 +421,97 @@
     ctx.restore();
   }
 
+  // Fungsi menggambar isi kartu terakhir dengan fitur Counting Days menuju 02 Januari 2027
+  function renderEndingCard(){
+    if(!endingState) return;
+    const { ctx, bg, frame, texture } = endingState;
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.save();
+    roundedPath(ctx, 11, 11, W - 22, H - 22, 28);
+    ctx.clip();
+    if(bg) ctx.drawImage(bg, 0, 0, W, H);
+    else { ctx.fillStyle = '#f6e9e6'; ctx.fillRect(0, 0, W, H); }
+    ctx.restore();
+
+    const now = Date.now();
+    const diff = Math.max(0, WEDDING_TARGET - now);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    ctx.save();
+    centered(ctx, 'C O U N T I N G   D A Y S', 490, '700 32px "Playfair Display", serif', burgundy);
+    centered(ctx, 'Menuju 02 Januari 2027', 542, 'italic 26px "Cormorant Garamond", serif', rose);
+    divider(ctx, 588, 220);
+
+    const units = [
+      { value: String(days).padStart(2, '0'), label: 'DAYS' },
+      { value: String(hours).padStart(2, '0'), label: 'HOURS' },
+      { value: String(minutes).padStart(2, '0'), label: 'MINUTES' },
+      { value: String(seconds).padStart(2, '0'), label: 'SECONDS' }
+    ];
+
+    const boxW = 148, boxH = 165, gap = 22;
+    const totalW = units.length * boxW + (units.length - 1) * gap;
+    const startX = (W - totalW) / 2;
+    const boxY = 640;
+
+    units.forEach((u, idx) => {
+      const bx = startX + idx * (boxW + gap);
+      ctx.save();
+      roundedPath(ctx, bx, boxY, boxW, boxH, 18);
+      ctx.fillStyle = 'rgba(255, 248, 250, 0.86)';
+      ctx.fill();
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = 'rgba(191, 145, 83, 0.78)';
+      ctx.stroke();
+
+      ctx.font = '700 54px "Playfair Display", serif';
+      ctx.fillStyle = rose;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(u.value, bx + boxW / 2, boxY + 68);
+
+      ctx.font = '600 17px "Inter", sans-serif';
+      ctx.fillStyle = burgundy;
+      ctx.fillText(u.label, bx + boxW / 2, boxY + 130);
+      ctx.restore();
+    });
+
+    divider(ctx, 868, 220);
+    centered(ctx, 'TERIMA KASIH', 945, '700 30px "Cormorant Garamond", serif', burgundy);
+    centered(ctx, 'SUDI MENJADI SEBAHAGIAN DARIPADA HARI BAHAGIA KAMI', 992, '600 21px "Cormorant Garamond", serif', ink);
+    centered(ctx, 'Ayu & Danial', 1075, '400 72px "Great Vibes", cursive', rose);
+    ctx.restore();
+
+    ctx.drawImage(frame, 0, 0);
+    texture.needsUpdate = true;
+  }
+
   async function buildTexture(page,index){
     const canvasTex = document.createElement('canvas'); canvasTex.width=W; canvasTex.height=H;
     const ctx=canvasTex.getContext('2d'); const bg=await loadFirstAvailable(page.background);
     ctx.save(); roundedPath(ctx,11,11,W-22,H-22,28); ctx.clip(); if(bg)ctx.drawImage(bg,0,0,W,H); else {ctx.fillStyle='#f6e9e6';ctx.fillRect(0,0,W,H);} ctx.restore();
     const frame=document.createElement('canvas'); frame.width=W; frame.height=H; const f=frame.getContext('2d');
     f.clearRect(0,0,W,H); roundedPath(f,11,11,W-22,H-22,28); f.lineWidth=5;f.strokeStyle='rgba(191,145,83,.85)';f.stroke();roundedPath(f,24,24,W-48,H-48,22);f.lineWidth=2;f.strokeStyle='rgba(255,250,247,.86)';f.stroke();
+    
+    const texture=new THREE.CanvasTexture(canvasTex);
+    texture.encoding=THREE.sRGBEncoding;
+    texture.anisotropy=renderer.capabilities.getMaxAnisotropy();
+
+    if(page.kind==='ending'){
+      endingState = { canvasTex, ctx, bg, frame, texture };
+      renderEndingCard();
+      return texture;
+    }
+
     ctx.save();
     if(page.kind==='cover'){
       centered(ctx,'W A L I M A T U L U R U S',480,'600 25px "Cormorant Garamond", serif',burgundy);
       centered(ctx,'Ayu',605,'400 112px "Great Vibes", cursive',rose);
-      centered(ctx,'&',685,'italic 42px "Playfair Display", serif','#b27b8d');
+      centered(ctx,'&',690,'italic 42px "Playfair Display", serif','#b27b8d');
       centered(ctx,'Danial',775,'400 112px "Great Vibes", cursive',rose);
       divider(ctx,845,168);
       centered(ctx,'02 . 01 . 2027',898,'600 26px "Inter", sans-serif',burgundy);
@@ -377,20 +525,31 @@
       drawMapMark(ctx,600);
       divider(ctx,850,185);
       centered(ctx,'SEBARANG PERTANYAAN, SILA HUBUNGI',895,'700 25px "Cormorant Garamond", serif',burgundy);
-      centered(ctx,'013-867 2430  ·  SANIP (AYAH)',948,'600 22px "Inter", sans-serif',ink);
-      centered(ctx,'013-999 0930  ·  LINA (IBU)',990,'600 22px "Inter", sans-serif',ink);
-      centered(ctx,'013-456 8930  ·  RIZAL (ADIK)',1032,'600 22px "Inter", sans-serif',ink);
+      centered(ctx,'011-2655 7625 ·  SANIP (AYAH)',948,'600 22px "Inter", sans-serif',ink);
+      centered(ctx,'011-6409 2705 ·  LINA (IBU)',990,'600 22px "Inter", sans-serif',ink);
+      centered(ctx,'011-2730 9517 ·  AIN (ADIK)',1032,'600 22px "Inter", sans-serif',ink);
       centered(ctx,'013-867 2430  ·  ARILL (ADIK)',1074,'600 22px "Inter", sans-serif',ink);
-      const qr=await loadFirstAvailable(['qrcode.png','assets/qrcode.png']);
-      if(qr){ctx.save();ctx.fillStyle='#fff';ctx.fillRect(390,1130,110,110);ctx.drawImage(qr,398,1138,94,94);ctx.restore();centered(ctx,'IMBAS UNTUK LOKASI',1262,'600 20px "Cormorant Garamond", serif',burgundy);}
-    } else if(page.kind==='invite'){
-      // Assalammualaikum diturunkan sedikit ke bawah
+      const qr = await loadFirstAvailable(['qrcode.png','assets/qrcode.png']);
+    if(qr){
+      ctx.save();
+      
+      // 1. Kotak putih latar belakang (Lebar & Tinggi: 200px, Posisi X: (900-200)/2 = 350)
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(350, 1115, 200, 200);
+      
+      // 2. Imej QR Code (Lebar & Tinggi: 184px, dengan jarak padding 8px dari kotak putih)
+      ctx.drawImage(qr, 358, 1123, 184, 184);
+      
+      ctx.restore();
+      
+      // 3. Teks diturunkan ke Y = 1345 supaya berada di bawah kotak QR yang baru
+      centered(ctx, 'IMBAS UNTUK LOKASI', 1330, '600 20px "Cormorant Garamond", serif', burgundy);
+}} else if(page.kind==='invite'){
       centered(ctx,'ASSALAMUALAIKUM WBT & SALAM SEJAHTERA,',410,'700 23px "Cormorant Garamond", serif','#a36a80');
       centered(ctx,'SANIP BIN HASSAN',458,'700 25px "Cormorant Garamond", serif',ink);
       centered(ctx,'&',490,'700 bold 23px "Cormorant Garamond", serif',ink);
       centered(ctx,'NORHASLINA BINTI AHMAD',525,'700 25px "Cormorant Garamond", serif',ink);
       
-      // Dengan penuh kesyukuran menjemput dinaikkan ke atas
       centered(ctx,'DENGAN PENUH KESYUKURAN MENJEMPUT',573,'700 23px "Cormorant Garamond", serif','#a36a80');
       centered(ctx,"DATO’ | DATIN | TUAN | PUAN | ENCIK | CIK",608,'600 23px "Cormorant Garamond", serif','#a36a80');
       centered(ctx,'KE MAJLIS PERKAHWINAN',643,'700 23px "Cormorant Garamond", serif','#a36a80');
@@ -407,13 +566,10 @@
       centered(ctx,'86400 PARIT RAJA, JOHOR',1113,'600 23px "Inter", sans-serif',ink);
       centered(ctx,'HADIRLAH MEMERIAHKAN HARI BERSEJARAH INI,',1163,'600 22px "Cormorant Garamond", serif','#a36a80');
       centered(ctx,'MOGA BERSATU DOA DAN RESTU DALAM KASIH ILAHI.',1188,'600 22px "Cormorant Garamond", serif','#a36a80');
-    } else {
-      centered(ctx,'TERIMA KASIH',755,'600 30px "Cormorant Garamond", serif','rgba(103,45,68,.78)');
-      centered(ctx,'SUDI MENJADI SEBAHAGIAN DARIPADA HARI KAMI',800,'500 21px "Cormorant Garamond", serif','rgba(103,45,68,.74)');
     }
     ctx.restore();
     ctx.drawImage(frame,0,0);
-    const texture=new THREE.CanvasTexture(canvasTex); texture.encoding=THREE.sRGBEncoding; texture.anisotropy=renderer.capabilities.getMaxAnisotropy(); texture.needsUpdate=true;
+    texture.needsUpdate=true;
     return texture;
   }
 
@@ -445,7 +601,6 @@
     return sprite;
   }
 
-  // Menghidupkan semula bunga dengan animasi mengembang dan mengecut (blooming pulse)
   function addFlower(x, y, z, size = 0.36, variant = 'flower'){
     const group = new THREE.Group();
     group.position.set(x, y, z);
@@ -626,14 +781,53 @@
     }
   }
 
-  function addOptionalCoupleImages(){
-    const slots=[{file:'assets/couple_1.png',z:.22,x:-5.05,y:.2},{file:'assets/couple_2.png',z:-29.78,x:5.05,y:-.25},{file:'assets/couple_3.png',z:-59.78,x:-5.05,y:.1}];
-    slots.forEach(slot=>{
-      textureLoader.load(slot.file,tex=>{
-        tex.encoding=THREE.sRGBEncoding;const ratio=(tex.image.width||1)/(tex.image.height||1);const height=2.9;const width=Math.max(1.0,Math.min(2.25,height*ratio));
-        const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false});
-        const mesh=new THREE.Mesh(new THREE.PlaneGeometry(width,height),mat);mesh.position.set(slot.x,slot.y,slot.z);mesh.rotation.y=slot.x<0?.10:-.10;scene.add(mesh);
-      },undefined,()=>{});
+  // Couple_4–7 are transparent cut-outs midway between each gate and card.
+  // Alternate bottom-corner placement: right, left, right, left — never centered.
+  function addBetweenGateCoupleImages(){
+    const slots = [
+      {file:'assets/couple_4.png', z:3.75,   x:2.18,  y:-4.18, tilt:-0.008},
+      {file:'assets/couple_5.png', z:-26.25, x:-2.18, y:-4.18, tilt:0.008},
+      {file:'assets/couple_6.png', z:-56.25, x:2.18,  y:-4.18, tilt:-0.006},
+      {file:'assets/couple_7.png', z:-86.25, x:-2.18, y:-4.18, tilt:0.006}
+    ];
+    slots.forEach((slot, index) => {
+      textureLoader.load(slot.file, tex => {
+        tex.encoding = THREE.sRGBEncoding;
+        tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        const ratio = (tex.image.width || 1) / (tex.image.height || 1);
+        // Preserve the source ratio and keep the couple portrait-sized, not a full-page image.
+        let height = 3.75;
+        let width = height * ratio;
+        if (width > 2.8) { width = 2.8; height = width / ratio; }
+        if (width < 1.35) { width = 1.35; height = width / ratio; }
+        const material = new THREE.MeshBasicMaterial({
+          map: tex,
+          transparent: true,
+          alphaTest: 0.015,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+          toneMapped: false
+        });
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
+        mesh.position.set(slot.x, slot.y, slot.z);
+        mesh.rotation.y = index % 2 === 0 ? 0.035 : -0.035;
+        mesh.rotation.z = slot.tilt;
+        mesh.renderOrder = 3;
+        // Hide all four cut-outs initially; the scroll chapter controller reveals only its own one.
+        mesh.visible = false;
+        scene.add(mesh);
+        floating.push({
+          mesh,
+          baseX: slot.x,
+          baseY: slot.y,
+          baseRotation: slot.tilt,
+          chapterIndex: index,
+          phase: index * 1.37 + 0.3,
+          kind: 'coupleCutout'
+        });
+      }, undefined, () => {
+        console.warn(`Couple cut-out not found: ${slot.file}. Check that it is inside the assets folder.`);
+      });
     });
   }
 
@@ -666,7 +860,10 @@
       decorateCardEdges(page.z, offsetX);
       makeGate(page.z+7.5,i);
     }
-    addOptionalCoupleImages();
+    addBetweenGateCoupleImages();
+
+    // Perbarui hitungan mundur setiap 1 detik
+    setInterval(renderEndingCard, 1000);
 
     for(let i = 0; i < 16; i++){
       const z = 12 - Math.random() * 108;
@@ -686,7 +883,7 @@
 
   const scrollState={target:0,current:0};let lastChapter=-1;let mouseX=0,mouseY=0;
   const bgEnv = document.getElementById('bgEnv');
-  const stops=[0,.28,.51,.74,1];
+  const stops=[0,.125,.375,.625,.875,1];
   function easedStops(p,arr){
     for(let i=0;i<arr.length-1;i++)if(p<=arr[i+1]){const a=arr[i],b=arr[i+1],t=THREE.MathUtils.clamp((p-a)/(b-a),0,1);return i+t;}
     return arr.length-1;
@@ -694,22 +891,29 @@
   function interpAnchor(p,values){
     const t=easedStops(p,stops);const i=Math.min(values.length-2,Math.floor(t));const local=t-i;const smooth=local*local*(3-2*local);return THREE.MathUtils.lerp(values[i],values[i+1],smooth);
   }
-  const camX=[0,.25,-.28,.22,0],camY=[0,-.12,.18,-.1,0];
+  const camX=[0,.16,.25,-.28,.18,0],camY=[0,-.08,-.12,.18,-.1,0];
+  const chapterCenters=[.125,.375,.625,.875];
+  const chapterThresholds=[.25,.5,.75];
+  const cameraZ=[33,18,-12,-42,-72,-75];
   function updateChapter(p){
-    const chapter=p<.20?0:p<.43?1:p<.68?2:3;
+    const chapter=p<chapterThresholds[0]?0:p<chapterThresholds[1]?1:p<chapterThresholds[2]?2:3;
     if(chapter!==lastChapter){
       lastChapter=chapter;
       document.getElementById('chapterNum').textContent=String(chapter+1).padStart(2,'0');
-      document.getElementById('chapterKicker').textContent=pages[chapter].kicker;
+      document.getElementById('chapterKicker').textContent=['BABAK 1 · SAMPUL','BABAK 2 · LOKASI','BABAK 3 · JEMPUTAN','BABAK 4 · PENUTUP'][chapter];
       document.getElementById('chapterTitle').textContent=pages[chapter].name;
       document.getElementById('chapterDesc').textContent=pages[chapter].desc;
       document.getElementById('locationLink').style.display=chapter===1?'inline-flex':'none';
       document.querySelectorAll('.chapter-dot').forEach((el,i)=>el.classList.toggle('active',i===chapter));
-      gsap.fromTo('.chapter-note',{opacity:.45,y:10},{opacity:1,y:0,duration:.65,ease:'power2.out'});
+      const prev = document.getElementById('prevChapter');
+      const next = document.getElementById('nextChapter');
+      prev.disabled = chapter === 0;
+      next.textContent = chapter < 3 ? `Seterusnya: ${pages[chapter+1].name} →` : '＋ Add to Calendar';
+      next.classList.toggle('calendar-next', chapter === 3);
+      gsap.fromTo('.chapter-note',{opacity:.55,y:8},{opacity:1,y:0,duration:.45,ease:'power2.out'});
     }
     document.getElementById('progressFill').style.width=(p*100).toFixed(2)+'%';
     document.getElementById('progressPct').textContent=Math.round(p*100).toString().padStart(2,'0')+'%';
-    document.getElementById('scrollHint').style.opacity=p>.96?'0':'.92';
   }
   function setupScroll(){
     ScrollTrigger.create({trigger:'#journey',start:'top top',end:'bottom bottom',onUpdate:self=>{scrollState.target=self.progress;updateChapter(self.progress);},onRefresh:self=>{scrollState.target=self.progress;updateChapter(self.progress);}});
@@ -721,7 +925,7 @@
     const time=clock.getElapsedTime();
     scrollState.current+=(scrollState.target-scrollState.current)*.075;
     const p=scrollState.current;
-    camera.position.z=34-150*p;
+    camera.position.z=interpAnchor(p,cameraZ);
     camera.position.x=interpAnchor(p,camX)+mouseX*.22;
     camera.position.y=interpAnchor(p,camY)-mouseY*.18;
     camera.lookAt(camera.position.x*.74+mouseX*.2,camera.position.y*.74-mouseY*.15,camera.position.z-18);
@@ -766,6 +970,19 @@
         obj.mesh.position.y = obj.baseY + Math.sin(time * 0.5 + obj.phase) * 0.03;
         const pulse = 1 + Math.sin(time * obj.speed + obj.phase) * 0.13;
         obj.mesh.scale.set(pulse, pulse, 1);
+      } else if(obj.kind==='coupleCutout'){
+        // One portrait cut-out per chapter only: 4, 5, 6, then 7.
+        // Chapter ranges match updateChapter(): 0–25%, 25–50%, 50–75%, 75–100%.
+        const activeCoupleChapter = p < 0.25 ? 0 : p < 0.50 ? 1 : p < 0.75 ? 2 : 3;
+        const isActive = obj.chapterIndex === activeCoupleChapter;
+        obj.mesh.visible = isActive;
+        if (obj.mesh.material) {
+          // Keep the active chapter's couple fully visible from its first frame;
+          // all other chapter cut-outs are hidden entirely.
+          obj.mesh.material.opacity = isActive ? 1 : 0;
+        }
+        obj.mesh.position.y = obj.baseY + Math.sin(time * 0.48 + obj.phase) * 0.045;
+        obj.mesh.rotation.z = obj.baseRotation + Math.sin(time * 0.32 + obj.phase) * 0.008;
       } else if(obj.kind==='starPearl'){
         obj.mesh.position.y = obj.baseY + Math.sin(time * obj.floatSpeed + obj.phase) * 0.06;
         const twinkle = 0.55 + 0.45 * Math.sin(time * obj.twinkleSpeed + obj.phase);
@@ -780,7 +997,173 @@
   }
   function resize(){camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));renderer.setSize(window.innerWidth,window.innerHeight,false);ScrollTrigger.refresh();}
   window.addEventListener('resize',resize,{passive:true});
-  
+
+  // Chapter-level navigation does not replace scroll: it gives guests an obvious alternative.
+  function scrollToChapter(index){
+    const chapter = Math.max(0, Math.min(3, index));
+    const journey = document.getElementById('journey');
+    const top = journey.getBoundingClientRect().top + window.scrollY;
+    const scrollable = Math.max(0, journey.offsetHeight - window.innerHeight);
+    window.scrollTo({top: top + chapterCenters[chapter] * scrollable, behavior:'smooth'});
+  }
+  document.getElementById('prevChapter').addEventListener('click',()=>scrollToChapter(Math.max(0,lastChapter-1)));
+  document.getElementById('nextChapter').addEventListener('click',()=>{
+    if(lastChapter < 3) scrollToChapter(lastChapter+1);
+    else openCalendarModal();
+  });
+  document.querySelectorAll('.chapter-dot').forEach(dot=>dot.addEventListener('click',()=>scrollToChapter(Number(dot.dataset.chapter))));
+
+  // Calendar action: timed event in Malaysia time (UTC+8), with a clickable Google Maps location.
+  const calendarModal = document.getElementById('calendarModal');
+  const calendarModalCard = document.getElementById('calendarModalCard');
+  const googleCalendarLink = document.getElementById('googleCalendarLink');
+  const weddingTitle = 'Walimatulurus Ayu & Danial';
+  const weddingDateStart = '20270102T090000'; // 9:00 AM Asia/Kuala_Lumpur
+  const weddingDateEnd = '20270102T180000';   // 6:00 PM Asia/Kuala_Lumpur
+  const weddingLocation = 'Lorong Haji Hassan, Jalan Kampung Parit Sempadan Laut, 86400 Parit Raja, Johor';
+  const weddingMapUrl = 'https://maps.app.goo.gl/35REVG1qtnf4qi9Y9';
+  const weddingDetails = 'Majlis perkahwinan Siti Rohayu & Danial Haziq.\nTarikh: Sabtu, 2 Januari 2027.\nMasa: 9:00 pagi hingga 6:00 petang (waktu Malaysia, UTC+8).\nAlamat: ' + weddingLocation + '.\nBuka lokasi rumah di Google Maps: ' + weddingMapUrl;
+  const googleCalendarParams = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: weddingTitle,
+    dates: weddingDateStart + '/' + weddingDateEnd,
+    details: weddingDetails,
+    location: weddingMapUrl,
+    ctz: 'Asia/Kuala_Lumpur'
+  });
+  googleCalendarLink.href = 'https://calendar.google.com/calendar/render?' + googleCalendarParams.toString();
+
+  function openCalendarModal(){
+    calendarModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    calendarModalCard.focus();
+  }
+  function closeCalendarModal(){
+    calendarModal.hidden = true;
+    document.body.style.overflow = '';
+    document.getElementById('nextChapter').focus();
+  }
+  function icalEscape(value){
+    return String(value).replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+  }
+  function downloadCalendarFile(){
+    const now = new Date();
+    const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Ayu Danial//Walimatulurus Invitation//MS',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      'UID:ayu-danial-walimatulurus-20270102@digital-invitation',
+      'DTSTAMP:' + stamp,
+      // Convert 9:00 AM–6:00 PM Malaysia time (UTC+8) to UTC for broad calendar compatibility.
+      'DTSTART:20270102T010000Z',
+      'DTEND:20270102T100000Z',
+      'SUMMARY:' + icalEscape(weddingTitle),
+      'DESCRIPTION:' + icalEscape(weddingDetails),
+      'LOCATION:' + icalEscape(weddingMapUrl),
+      'URL:' + weddingMapUrl,
+      'STATUS:CONFIRMED',
+      'TRANSP:OPAQUE',
+      'END:VEVENT',
+      'END:VCALENDAR',
+      ''
+    ].join('\r\n');
+    const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Walimatulurus-Ayu-Danial-2-Jan-2027.ics';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(()=>URL.revokeObjectURL(url), 1500);
+    closeCalendarModal();
+  }
+  document.getElementById('downloadIcsBtn').addEventListener('click', downloadCalendarFile);
+  document.getElementById('closeCalendarModal').addEventListener('click', closeCalendarModal);
+  document.getElementById('calendarModalBackdrop').addEventListener('click', closeCalendarModal);
+  googleCalendarLink.addEventListener('click', closeCalendarModal);
+
+  const readModal = document.getElementById('readModal');
+  const readModalTitle = document.getElementById('readModalTitle');
+  const readModalKicker = document.getElementById('readModalKicker');
+  const readModalContent = document.getElementById('readModalContent');
+  const readCardBtn = document.getElementById('readCardBtn');
+  const readEntries = [
+    {
+      kicker:'BABAK 1 DARIPADA 4 · SAMPUL', title:'Ayu & Danial', content:`
+        <p class="modal-date">WALIMATULURUS · 02 JANUARI 2027</p>
+        <p><strong>Ayu &amp; Danial</strong></p><p class="modal-date">#danikahiayu</p>
+        <p><em>Beras kunyit kami taburi,<br>Air mawar direnjis wangi;<br>Undangan kami setulus hati,<br>Harap sudi datang merai.</em></p>
+        <p>Teruskan perjalanan untuk melihat lokasi majlis, jemputan rasmi dan penutup.</p>`
+    },
+    {
+      kicker:'BABAK 2 DARIPADA 4 · LOKASI MAJLIS', title:'Lokasi Majlis', content:`
+        <p><strong>02 Januari 2027</strong></p><p>Lorong Haji Hassan,<br>Jalan Kampung Parit Sempadan Laut,<br>86400 Parit Raja, Johor.</p>
+        <p><a href="https://maps.app.goo.gl/35REVG1qtnf4qi9Y9" target="_blank" rel="noopener noreferrer">Buka lokasi di Google Maps ↗</a></p>
+        <p><strong>Untuk pertanyaan:</strong></p><p>Sanip (Ayah) · 011-2655 7625<br>Lina (Ibu) · 011-6409 2705<br>Ain (Adik) · 011-2730 9517<br>Arill (Adik) · 013-867 2430</p>
+        <p>QR lokasi juga tersedia pada kad 3D.</p>`
+    },
+    {
+      kicker:'BABAK 3 DARIPADA 4 · JEMPUTAN RASMI', title:'Jemputan Rasmi', content:`
+        <p>Assalamualaikum WBT &amp; salam sejahtera.</p>
+        <p><strong>Sanip bin Hassan &amp; Norhaslina binti Ahmad</strong> dengan penuh kesyukuran menjemput Dato’, Datin, Tuan, Puan, Encik dan Cik ke majlis perkahwinan:</p>
+        <p><strong>Siti Rohayu &amp; Danial Haziq</strong></p>
+        <p class="modal-date">02 JANUARI 2027</p>
+        <p>Lorong Haji Hassan,<br>Jalan Kampung Parit Sempadan Laut,<br>86400 Parit Raja, Johor.</p>
+        <p>Hadirlah memeriahkan hari bersejarah ini. Moga bersatu doa dan restu dalam kasih Ilahi.</p>`
+    },
+    {
+      kicker:'BABAK 4 DARIPADA 4 · PENUTUP', title:'Counting Days', content:`
+        <p class="modal-date">MENUJU 02 JANUARI 2027</p><p id="modalCountdown">Menghitung hari menuju detik bahagia kami.</p>
+        <p><strong>Terima kasih</strong> kerana sudi menjadi sebahagian daripada hari bahagia kami.</p><p>Ayu &amp; Danial</p>`
+    }
+  ];
+  let modalReturnFocus = null;
+  function renderReadModal(index){
+    const i=Math.max(0,Math.min(3,index));
+    readModalKicker.textContent=readEntries[i].kicker;
+    readModalTitle.textContent=readEntries[i].title;
+    readModalContent.innerHTML=readEntries[i].content;
+    document.getElementById('modalPrev').disabled=i===0;
+    document.getElementById('modalNext').textContent=i===3?'Tutup butiran ✓':'Babak seterusnya →';
+    document.getElementById('modalNext').dataset.chapter=String(i);
+    const countdown=document.getElementById('modalCountdown');
+    if(countdown){
+      const target=new Date('2027-01-02T00:00:00+08:00').getTime();
+      const days=Math.max(0,Math.floor((target-Date.now())/86400000));
+      countdown.textContent=days===0?'Hari bahagia telah tiba!':`${days} hari lagi menuju detik bahagia kami.`;
+    }
+  }
+  function openReadModal(){
+    modalReturnFocus=document.activeElement;
+    renderReadModal(lastChapter<0?0:lastChapter);
+    readModal.hidden=false;
+    document.body.style.overflow='hidden';
+    document.getElementById('readModalCard').focus();
+  }
+  function closeReadModal(){
+    readModal.hidden=true;
+    document.body.style.overflow='';
+    if(modalReturnFocus && typeof modalReturnFocus.focus==='function') modalReturnFocus.focus();
+  }
+  readCardBtn.addEventListener('click',openReadModal);
+  document.getElementById('closeReadModal').addEventListener('click',closeReadModal);
+  document.getElementById('readModalBackdrop').addEventListener('click',closeReadModal);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!calendarModal.hidden)closeCalendarModal();else if(e.key==='Escape'&&!readModal.hidden)closeReadModal();});
+  document.getElementById('modalPrev').addEventListener('click',()=>{
+    const i=Number(document.getElementById('modalNext').dataset.chapter||lastChapter||0);
+    if(i>0){closeReadModal();scrollToChapter(i-1);}
+  });
+  document.getElementById('modalNext').addEventListener('click',()=>{
+    const i=Number(document.getElementById('modalNext').dataset.chapter||lastChapter||0);
+    if(i<3){closeReadModal();scrollToChapter(i+1);}
+    else closeReadModal();
+  });
+
   document.getElementById('openBtn').addEventListener('click',()=>{
     const curtain=document.getElementById('curtain');
     const openEffect = document.getElementById('openEffect');
@@ -809,5 +1192,71 @@
   document.fonts.ready.then(()=>buildScene()).catch(()=>buildScene());
 })();
 </script>
+<script>
+/* Logo cleanup: prefer the supplied assets/logo.jpg, fallback to assets/logo.png.
+   If the source has an opaque white/off-white canvas, key out near-white pixels;
+   already-transparent logos are left untouched. */
+(function(){
+  const logo = document.getElementById('brandLogo');
+  if (!logo) return;
+  const sources = ['assets/logo.jpg', 'assets/logo.png'];
+  let sourceIndex = 0;
+  let processed = false;
+
+  logo.addEventListener('error', function(){
+    if (sourceIndex < sources.length - 1) {
+      sourceIndex += 1;
+      logo.src = sources[sourceIndex];
+    } else {
+      console.warn('Logo file not found. Please place logo.jpg or logo.png in assets/.');
+    }
+  });
+
+  logo.addEventListener('load', function(){
+    if (processed || !logo.naturalWidth || !logo.naturalHeight) return;
+    processed = true;
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = logo.naturalWidth;
+      canvas.height = logo.naturalHeight;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(logo, 0, 0);
+      const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const d = image.data;
+      const total = canvas.width * canvas.height;
+      let paleCount = 0;
+      // Count opaque, nearly neutral bright pixels to tell whether a white tile exists.
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3];
+        const spread = Math.max(r, g, b) - Math.min(r, g, b);
+        if (a > 12 && r > 226 && g > 226 && b > 226 && spread < 25) paleCount++;
+      }
+      // Do not alter normal transparent cut-outs that contain only a little white detail.
+      if (paleCount / total < 0.045) return;
+
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i], g = d[i + 1], b = d[i + 2];
+        const spread = Math.max(r, g, b) - Math.min(r, g, b);
+        const minChannel = Math.min(r, g, b);
+        if (spread < 28 && minChannel > 224) {
+          // Fade edge pixels smoothly to avoid a white halo around the logo.
+          const fade = Math.max(0, Math.min(1, (248 - minChannel) / 20));
+          d[i + 3] = Math.round(d[i + 3] * fade);
+        }
+      }
+      ctx.putImageData(image, 0, 0);
+      logo.src = canvas.toDataURL('image/png');
+      logo.dataset.backgroundRemoved = 'true';
+    } catch (err) {
+      // CSS stays transparent; if canvas processing is blocked, keep the original logo.
+      console.warn('Could not auto-remove logo background:', err);
+    }
+  });
+
+  // Explicitly set the first source for consistent fallback behavior.
+  logo.src = sources[sourceIndex];
+})();
+</script>
+
 </body>
 </html>
